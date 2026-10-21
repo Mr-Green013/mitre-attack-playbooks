@@ -1,74 +1,28 @@
-# MITRE ATT&CK® Playbooks (ภาษาไทย)
+# 🛡️ MITRE ATT&CK® v20.0 All-in-One Interactive Mind Map, Threat Groups, Attack Campaigns & Playbooks Studio
 
-คู่มือปฏิบัติการสำหรับทีม SOC / Incident Response / Detection Engineering ที่อธิบายทุก Tactic ของ MITRE ATT&CK v20.0
-ใน 3 มุม:
+[![MITRE ATT&CK v20.0](https://img.shields.io/badge/MITRE%20ATT%26CK-v20.0%20%28935%20TTPs%29-indigo)](https://attack.mitre.org/)
+[![Threat Groups](https://img.shields.io/badge/APT%20Groups-182%20Groups%20%2B%2016%20Deep%20Dossiers-rose)](https://attack.mitre.org/groups/)
+[![Campaigns](https://img.shields.io/badge/Campaigns-61%20Official%20Campaigns-cyan)](https://attack.mitre.org/campaigns/)
+[![Adversary Comms](https://img.shields.io/badge/Adversary%20Dialogues-Vishing%20%7C%20Teams%20%7C%20Tor%20Ransomware-amber)](https://github.com/Mr-Green013/mitre-attack-playbooks)
 
-| มุม | คำถามที่ตอบ |
-|---|---|
-| **วิธีการทำงาน** | ผู้โจมตีทำขั้นตอนนี้อย่างไร ใช้เครื่องมือหรือกลไกอะไร ทิ้งร่องรอยอะไรไว้ |
-| **วิธีตรวจสอบ** | ต้องเก็บ Log อะไร ดูสัญญาณอะไร และ query KQL สำหรับ Microsoft Sentinel / Defender XDR |
-| **วิธีรับมือ** | ขั้นตอน triage, containment, eradication, recovery และมาตรการป้องกันระยะยาว (Mitigations) |
+คลังฐานข้อมูลและเว็บแอปพลิเคชันแบบโต้ตอบ **MITRE ATT&CK® v20.0** ฉบับสมบูรณ์สำหรับทีม **SOC / Blue Team**, **Red Team / Pentest**, **Cyber Threat Intelligence (CTI)** และ **CISO / Compliance**
 
-> เอกสารชุดนี้เป็นงานชุมชน ไม่ได้มีส่วนเกี่ยวข้องหรือได้รับการรับรองจาก MITRE
-> ATT&CK® is a registered trademark of The MITRE Corporation.
-> KQL ทุกชุดเป็นจุดเริ่มต้นสำหรับ hunting — ต้องทดสอบกับข้อมูลจริงใน tenant ของคุณและปรับ threshold ก่อนตั้งเป็น analytics rule
+## 🚀 โครงสร้างข้อมูลและ 8 โมดูลหลักในระบบ
+1. **🌌 Interactive Mind Map (Constellation & Spider View)**: แผนผังโต้ตอบครอบคลุม 3 Domains (`Enterprise`, `Mobile`, `ICS/OT`), **18 Sub-domains**, **39 Tactics**, **383 Techniques** และ **552 Sub-techniques** (รวม **935 TTPs**)
+2. **📊 Kill-Chain Matrix**: ตารางยุทธวิธีเรียงตามลำดับขั้นตอนการโจมตี พร้อมตัวกรองเจาะจงราย Sub-domain ทั้ง 18 แพลตฟอร์ม
+3. **🕵️ Threat Intelligence & Adversary Operations (`APT & Malware` - 4 หมวดย่อย)**:
+   - **กลุ่มผู้โจมตี & รายละเอียดการโจมตี (182 MITRE Groups + 16 Deep Dossiers)**: เจาะลึกลำดับขั้นตอนการโจมตี (Step-by-Step Kill Chain) ของ `APT29 (G0016)`, `APT28 (G0007)`, `Lazarus Group (G0032)`, `Contagious Interview (G1052)`, `Sandworm Team (G0034)`, `Volt Typhoon (G1017)`, `Salt Typhoon (G1045)`, `APT41 (G0096)`, `Mustang Panda (G0129)`, `Kimsuky (G0094)`, `OilRig (G0049)`, `Scattered Spider (G1015)`, `Storm-1811 / Black Basta (G1046)`, `Akira (G1024)`, `LockBit 3.0 (S0002)` และ `TeamPCP (G1056)` พร้อมสารบบครบทั้ง 182 กลุ่ม (`G0001`–`G1059`)
+   - **💬 การพูดคุย ล่อลวง & เจรจาต่อรอง (5 ห้องแชตจำลองจากเหตุการณ์จริง)**: บทสนทนา Vishing หลอก IT Helpdesk รีเซ็ต MFA, แชต Microsoft Teams ลวงให้กด `Ctrl+Win+Q` Quick Assist, แชต LinkedIn หลอกนักพัฒนาสัมภาษณ์งาน (`BeaverTail` / `InvisibleFerret`), ห้องแชตเจรจาค่าไถ่บน Tor Dark Web และบอต C2 บน Telegram / ตลาดซื้อขายสิทธิ์ Initial Access Broker
+   - **⚔️ ฐานข้อมูลการโจมตี & แคมเปญ (ครบทั้ง 61 MITRE Campaigns: `C0001`–`C0066`)**: รวมถึงแคมเปญปี 2025–2026 ล่าสุด เช่น `C0063` (Poland Wiper), `C0066` (U.S. Water Utilities), `C0064` (AI-Assisted Breach), `C0062` (AI-orchestrated Campaign), `C0054` (Operation Triangulation), `C0046` (ArcaneDoor) และ `C0024` (SolarWinds Compromise)
+   - **🧰 วิธีการโจมตี คำสั่ง CLI & มัลแวร์ประจำกลุ่ม (`Attack Methods & Tradecraft`)**: ตัวอย่างคำสั่ง Command-Line จริง (HTML Smuggling, LOLBins, BYOVD, LSASS Dump/DCSync, Netsh Portproxy/Rclone, ESXi & PLC Sabotage) พร้อมแนวทางตรวจจับด้วย SIEM/EDR
+4. **📖 Operational Role Playbooks**: คู่มือปฏิบัติการแยกตามบทบาท SOC/Blue Team, Red Team, CTI และ Purple Team
+5. **📚 Full Database Explorer (1,690+ Objects)**: ค้นหาและกรอง TTPs, Mitigations (`Mxxxx`), Data Sources (`DSxxxx`), Detection Strategies (`DETxxxx`), ICS Assets (`A0001`–`A0018`), Groups (`Gxxxx`) และ Campaigns (`Cxxxx`)
+6. **🗺️ Custom Mapping Studio & Auto-Mapper**: แปลงข้อความ Incident Log หรือส่งลำดับ Kill Chain ของกลุ่มแฮกเกอร์เข้าสู่วาดกราฟ Attack Flow อัตโนมัติ
+7. **🛡️ SIEM & Compliance Coverage Heatmap**: แมปความเชื่อมโยงระหว่าง **SIEM Use Cases ↔ MITRE ATT&CK® v20.0 ↔ ISO/IEC 27001:2022 ↔ NIST CSF 2.0 ↔ PDPA Thailand (มาตรา 37)**
+8. **🌐 Network Topology & Data Flow Diagram (DFD) Studio**: วาดผังเครือข่าย 5 Security Zones และจำลองรัศมีผลกระทบเมื่อถูกเจาะ (**Blast Radius Simulation**)
 
-## เริ่มอ่านจากตรงไหน
-
-1. [`docs/00-how-to-use.md`](docs/00-how-to-use.md) — วิธีใช้คู่มือ, IR lifecycle, ระดับความรุนแรง, Log ที่ต้องเปิดก่อน และข้อตกลงของ KQL
-2. เลือก Domain แล้วอ่านตามลำดับ Kill Chain:
-
-### Enterprise (15 Tactics)
-
-```mermaid
-flowchart LR
-  A[01 Reconnaissance] --> B[02 Resource Development] --> C[03 Initial Access] --> D[04 Execution]
-  D --> E[05 Persistence] --> F[06 Privilege Escalation] --> G[07 Stealth] --> H[08 Defense Impairment]
-  H --> I[09 Credential Access] --> J[10 Discovery] --> K[11 Lateral Movement]
-  K --> L[12 Collection] --> M[13 Command and Control] --> N[14 Exfiltration] --> O[15 Impact]
-```
-
-| # | Tactic | ไฟล์ | Technique ที่เจาะลึก |
-|---|---|---|---|
-| 01 | TA0043 Reconnaissance | [enterprise/01-reconnaissance.md](enterprise/01-reconnaissance.md) | T1595, T1589, T1598, T1593 |
-| 02 | TA0042 Resource Development | [enterprise/02-resource-development.md](enterprise/02-resource-development.md) | T1583/T1584, T1588, T1585/T1586, T1608 |
-| 03 | TA0001 Initial Access | [enterprise/03-initial-access.md](enterprise/03-initial-access.md) | T1566, T1190, T1133, T1078, T1195, T1199 |
-| 04 | TA0002 Execution | [enterprise/04-execution.md](enterprise/04-execution.md) | T1059, T1204, T1047, T1569, T1053, T1698/T1699 |
-| 05 | TA0003 Persistence | [enterprise/05-persistence.md](enterprise/05-persistence.md) | T1547, T1543, T1098, T1136, T1505.003, T1556 |
-| 06 | TA0004 Privilege Escalation | [enterprise/06-privilege-escalation.md](enterprise/06-privilege-escalation.md) | T1548, T1134, T1068, T1484 |
-| 07 | TA0005 Stealth | [enterprise/07-stealth.md](enterprise/07-stealth.md) | T1218, T1036, T1027, T1055, T1070, T1564 |
-| 08 | TA0112 Defense Impairment | [enterprise/08-defense-impairment.md](enterprise/08-defense-impairment.md) | T1685, T1686, T1553, T1688 |
-| 09 | TA0006 Credential Access | [enterprise/09-credential-access.md](enterprise/09-credential-access.md) | T1003, T1558, T1110, T1621, T1539/T1557, T1552 |
-| 10 | TA0007 Discovery | [enterprise/10-discovery.md](enterprise/10-discovery.md) | T1087/T1069, T1046, T1518, T1580 |
-| 11 | TA0008 Lateral Movement | [enterprise/11-lateral-movement.md](enterprise/11-lateral-movement.md) | T1021, T1550, T1570 |
-| 12 | TA0009 Collection | [enterprise/12-collection.md](enterprise/12-collection.md) | T1560, T1114, T1213, T1530 |
-| 13 | TA0011 Command and Control | [enterprise/13-command-and-control.md](enterprise/13-command-and-control.md) | T1071, T1219, T1572/T1090, T1105 |
-| 14 | TA0010 Exfiltration | [enterprise/14-exfiltration.md](enterprise/14-exfiltration.md) | T1567, T1041/T1048, T1537 |
-| 15 | TA0040 Impact | [enterprise/15-impact.md](enterprise/15-impact.md) | T1490, T1486, T1489, T1485, T1496 |
-
-### Mobile และ ICS / OT
-
-| Domain | ไฟล์ | ครอบคลุม |
-|---|---|---|
-| Mobile (Android / iOS) | [mobile/README.md](mobile/README.md) | 12 Tactics (TA0027–TA0041) |
-| ICS / OT | [ics/README.md](ics/README.md) | 12 Tactics (TA0100–TA0111) + ICS Assets A0001–A0018 |
-
-## โครงสร้างของแต่ละ Tactic
-
-ทุกไฟล์ใช้รูปแบบเดียวกัน (ดู [`templates/tactic-template.md`](templates/tactic-template.md)):
-
-1. **เป้าหมายของผู้โจมตี** — ทำไมผู้โจมตีต้องผ่านขั้นนี้
-2. **ลำดับการทำงาน** — ขั้นตอนที่มักเกิดขึ้นจริง
-3. **Log ที่ต้องมี** — Data source และตาราง Sentinel / Defender XDR
-4. **Technique เจาะลึก** — แต่ละข้อมี วิธีทำงาน → สัญญาณ → KQL → วิธีรับมือ → ป้องกันระยะยาว → False positive ที่พบบ่อย
-5. **Checklist ตอบสนองระดับ Tactic** — ใช้ได้ทันทีเมื่อพบสัญญาณใดๆ ในขั้นนี้
-
-## ใช้ร่วมกับ
-
-- เว็บไซต์ Mind Map / Matrix / ฐานข้อมูล 935 TTPs: [MITRE ATT&CK Mind Map Studio](https://github.com/Mr-Green013/AIAgentsforITOps/tree/feature/mitre-attack-site/mitre-attack-site)
-- [MITRE ATT&CK](https://attack.mitre.org/) — แหล่งข้อมูลทางการ ตรวจสอบรายละเอียดทุก Technique ก่อนอ้างอิง
-- [ATT&CK Navigator](https://mitre-attack.github.io/attack-navigator/) — ทำ coverage heatmap จาก Technique ที่มี detection แล้ว
-
-## การมีส่วนร่วม
-
-เพิ่ม Technique หรือ query ใหม่โดยใช้รูปแบบใน `templates/` ทุก query ที่เพิ่มควรระบุ: ตารางที่ใช้, สิ่งที่ต้องปรับ (threshold, allowlist) และ false positive ที่รู้จัก
+## 📂 โครงสร้างไฟล์ใน Repository
+- `index.html` / `mitre_attack_mindmap.html` — เว็บแอปพลิเคชันแบบ All-in-One (เปิดใช้งานผ่าน GitHub Pages ได้ทันที)
+- `playbooks/THREAT_GROUPS_AND_ATTACK_CAMPAIGNS_TH.md` — เอกสารสรุปแฟ้มเจาะลึก 16 กลุ่มผู้โจมตี, ลำดับ Kill Chain และบทสนทนาการล่อลวง/เจรจาค่าไถ่
+- `playbooks/mitre_playbooks_v20.json` — ฐานข้อมูล JSON ฉบับสมบูรณ์ (APT Dossiers, Adversary Communications, CLI Tradecraft, 182 Groups, 61 Campaigns)
+- `README.md` — คู่มือการใช้งานและการเปิด GitHub Pages
