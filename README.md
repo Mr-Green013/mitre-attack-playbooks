@@ -55,6 +55,8 @@
 - `docs/`, `enterprise/`, `mobile/`, `ics/`, `templates/` — Playbooks ราย Tactic (ตารางด้านบน)
 - `playbooks/THREAT_GROUPS_AND_ATTACK_CAMPAIGNS_TH.md` — เอกสารสรุปแฟ้มเจาะลึก 16 กลุ่มผู้โจมตี, ลำดับ Kill Chain และบทสนทนาการล่อลวง/เจรจาค่าไถ่
 - `playbooks/mitre_playbooks_v20.json` — ฐานข้อมูล JSON ฉบับสมบูรณ์ (APT Dossiers, Adversary Communications, CLI Tradecraft, 182 Groups, 61 Campaigns)
+- `manifest.json`, `icon.svg`, `sw.js` — ติดตั้งเป็นแอป (PWA) และ cache ไว้ใช้ตอนไม่มีเน็ต
+- `docker-compose.yml`, `deploy/nginx.conf` — รันเว็บในเครือข่ายภายในด้วย nginx
 - `README.md` — คู่มือการใช้งานและการเปิด GitHub Pages
 
 ## 🌐 การเปิดใช้งานผ่าน GitHub Pages
@@ -62,8 +64,15 @@
 2. เลือก **Source: Deploy from a branch**, branch **`main`**, โฟลเดอร์ **`/ (root)`** แล้วกด **Save**
 3. รอ 1–2 นาที แล้วเปิด `https://mr-green013.github.io/mitre-attack-playbooks/`
 
+## 📴 Offline / ติดตั้งเป็นแอป / Self-host
+- เปิดผ่าน GitHub Pages ครั้งหนึ่ง แล้ว `sw.js` จะ cache ตัวเว็บและ `playbooks/mitre_playbooks_v20.json` ไว้ใช้ตอนไม่มีเน็ต และติดตั้งเป็นแอป (PWA) ได้ผ่าน `manifest.json` — ถ้าแก้ `index.html` หรือ JSON ให้เพิ่มค่า `CACHE_VERSION` ใน `sw.js` ด้วย
+- เปิดไฟล์ `index.html` ตรงจากเครื่อง (`file://`) ก็ใช้ข้อมูลได้ครบ แต่ไม่มี Service Worker และหน้าตาจะเรียบลงถ้าโหลด Tailwind/Google Fonts จาก CDN ไม่ได้
+- รันในเครือข่ายภายใน: `docker compose up -d` แล้วเปิด `http://localhost:8080` (bind เฉพาะ 127.0.0.1, mount เฉพาะไฟล์เว็บ, ปฏิเสธ dotfile เช่น `.git`) — ถ้าต้องให้เครื่องอื่นเข้าถึง แก้ `ports` เป็น IP ของเครื่องและวางหลัง reverse proxy ที่มี TLS
+- ปุ่ม **Offline / PWA / สำรองข้อมูล** บนหน้าเว็บ: Export/Import งานที่แก้ในเบราว์เซอร์เป็นไฟล์ JSON, ตรวจสถานะ repo และดึง `mitre_playbooks_v20.json` ล่าสุดจาก repo (ถามยืนยันก่อนเขียนทับ)
+
 ## 🔐 หมายเหตุด้านความปลอดภัย
-- ข้อความที่ผู้ใช้กรอก (โน้ต, Mapping Studio, SIEM rule, Network map) และข้อมูลที่เคยบันทึกใน `localStorage` ถูกแปลงอักขระ `< > " ' & \` เป็นตัวอักษรเต็มความกว้างก่อนแสดงผล เพื่อป้องกัน XSS
+- ข้อความที่ผู้ใช้กรอก (โน้ต, Mapping Studio, SIEM rule, Network map) และข้อมูลที่เคยบันทึกใน `localStorage` รวมถึงไฟล์ backup ที่นำเข้าและ JSON ที่ดึงจาก repo ถูกแปลงอักขระ `< > " ' & \` เป็นตัวอักษรเต็มความกว้างก่อนแสดงผล เพื่อป้องกัน XSS
+- หน้าเว็บไม่มีฟังก์ชันเปิด GitHub Pages ผ่าน API (ต้องใช้ token สิทธิ์ admin) — ตั้งค่าเองที่ Settings → Pages ครั้งเดียว
 - ปุ่ม **Push to GitHub** ในหน้าเว็บส่ง Personal Access Token จากเบราว์เซอร์ไปที่ `api.github.com` โดยตรง (ไม่ได้เก็บลงเครื่อง) — ใช้ **fine-grained token** ที่จำกัดเฉพาะ repo นี้ สิทธิ์ *Contents: Read and write* และตั้งวันหมดอายุสั้น
 - ปุ่มนี้เขียนทับ `README.md`, `index.html` และ `playbooks/mitre_playbooks_v20.json` ใน repo ทุกครั้งที่กด
 - หน้าเว็บโหลด Tailwind (play CDN) และ Google Fonts จากภายนอก

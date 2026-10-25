@@ -1,0 +1,20 @@
+# Self-hosted copy of the site (internal network / air-gapped SOC): docker compose up -d → http://localhost:8080
+# Only the web files are mounted, so .git, docs sources and this file are never served.
+services:
+  mitre-attack-studio:
+    image: nginx:1.27-alpine
+    container_name: mitre-attack-studio
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8080:80"
+    read_only: true
+    tmpfs:
+      - /var/cache/nginx
+      - /var/run
+    volumes:
+      - ./deploy/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./index.html:/usr/share/nginx/html/index.html:ro
+      - ./manifest.json:/usr/share/nginx/html/manifest.json:ro
+      - ./icon.svg:/usr/share/nginx/html/icon.svg:ro
+      - ./sw.js:/usr/share/nginx/html/sw.js:ro
+      - ./playbooks:/usr/share/nginx/html/playbooks:ro

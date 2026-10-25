@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MITRE ATT&CK® v20.0 All-in-One Interactive Mind Map & Navigator</title>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link rel="manifest" href="manifest.json">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -23,6 +24,35 @@
   </script>
   <style>
     * { box-sizing: border-box; }
+    /* Offline / Air-Gapped Fallback Utility Rules */
+    .hidden { display: none !important; }
+    .flex { display: flex; }
+    .inline-flex { display: inline-flex; }
+    .grid { display: grid; }
+    .flex-col { flex-direction: column; }
+    .flex-1 { flex: 1 1 0%; }
+    .items-center { align-items: center; }
+    .justify-between { justify-content: space-between; }
+    .justify-center { justify-content: center; }
+    .flex-wrap { flex-wrap: wrap; }
+    .relative { position: relative; }
+    .absolute { position: absolute; }
+    .fixed { position: fixed; }
+    .sticky { position: sticky; }
+    .inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
+    .w-full { width: 100%; }
+    .h-full { height: 100%; }
+    .min-h-screen { min-height: 100vh; }
+    .overflow-hidden { overflow: hidden; }
+    .overflow-x-auto { overflow-x: auto; }
+    .overflow-y-auto { overflow-y: auto; }
+    .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .cursor-pointer { cursor: pointer; }
+    .select-none { user-select: none; }
+    .rounded-xl { border-radius: 0.75rem; }
+    .rounded-2xl { border-radius: 1rem; }
+    .rounded-full { border-radius: 9999px; }
+
     body {
       font-family: 'Inter', 'Noto Sans Thai', sans-serif;
       overflow-x: hidden;
@@ -193,6 +223,11 @@
           <svg class="w-3.5 h-3.5 text-slate-500 absolute left-2.5 top-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
           <button id="clearSearchBtn" onclick="clearSearch()" class="hidden absolute right-2 top-1.5 text-slate-400 hover:text-white text-xs">✕</button>
         </div>
+
+        <button onclick="openAlwaysOnModal()" class="px-3 py-1.5 rounded-xl bg-teal-500/20 hover:bg-teal-500 text-teal-300 hover:text-slate-950 border border-teal-500/40 text-xs font-semibold flex items-center gap-1.5 transition-all shadow" title="ใช้งานผ่าน GitHub Pages, ติดตั้งเป็นแอป (PWA), ดาวน์โหลดไฟล์เดี่ยว และสำรอง/กู้คืนข้อมูล">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>🟢 Offline / PWA / สำรองข้อมูล</span>
+        </button>
 
         <button onclick="openGitHubRepoModal()" class="px-3 py-1.5 rounded-xl bg-indigo-500/20 hover:bg-indigo-600 text-indigo-200 hover:text-white border border-indigo-500/40 text-xs font-semibold flex items-center gap-1.5 transition-all shadow">
           <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
@@ -1226,6 +1261,59 @@
       </div>
 
       <div class="p-5 overflow-y-auto custom-scroll space-y-4 text-xs">
+                <!-- LIVE REPO STATUS & POST-UPLOAD NEXT STEPS MANAGER -->
+        <div class="bg-emerald-950/30 border border-emerald-500/40 rounded-2xl p-4 space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="font-bold text-emerald-300 text-sm flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span>✅ ขั้นตอนจัดการต่อหลังอัปขึ้น Repo (Live Repo & GitHub Pages 24/7 Manager)</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <button onclick="checkLiveGitHubRepoStatus()" class="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-emerald-600 text-emerald-300 hover:text-white border border-emerald-500/40 text-[11px] font-semibold transition-all">
+                🔍 ตรวจสอบสถานะ Repo สด (Check Live Repo)
+              </button>
+              <button onclick="pullPlaybooksFromGitHubRepo()" class="px-2.5 py-1 rounded-lg bg-cyan-500/20 hover:bg-cyan-600 text-cyan-300 hover:text-white border border-cyan-500/40 text-[11px] font-semibold transition-all">
+                ☁️ ดึงข้อมูล Playbooks สดจาก Repo
+              </button>
+            </div>
+          </div>
+
+          <div id="liveRepoCheckBox" class="bg-slate-950/90 border border-slate-800 rounded-xl p-3 text-[11px] text-slate-300 space-y-1.5">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <span>📦 <strong>Repository:</strong> <a href="https://github.com/Mr-Green013/mitre-attack-playbooks" target="_blank" rel="noopener noreferrer" class="text-indigo-400 underline font-mono">https://github.com/Mr-Green013/mitre-attack-playbooks</a></span>
+              <span id="liveRepoBadge" class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono text-[10px]">กำลังตรวจสอบสถานะ...</span>
+            </div>
+            <div id="liveRepoFilesList" class="text-slate-400 font-mono text-[10.5px]">กดปุ่ม "🔍 ตรวจสอบสถานะ Repo สด" เพื่อเช็กไฟล์ที่อยู่บน GitHub และสถานะ GitHub Pages</div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5 pt-1">
+            <div class="bg-slate-950/90 border border-slate-800 rounded-xl p-3 space-y-1.5">
+              <div class="font-bold text-amber-300 text-xs">1️⃣ เปิดเว็บออนไลน์ 24/7 (GitHub Pages)</div>
+              <p class="text-[11px] text-slate-400 leading-relaxed">หากคุณอัปโหลดไฟล์ขึ้น Repo แล้ว ให้เปิดใช้งานเว็บถาวรโดยไปที่หน้า Settings → Pages เลือก Branch: <code class="text-white">main</code> โฟลเดอร์ <code class="text-white">/ (root)</code> แล้วกด Save (ตั้งครั้งเดียว หลังจากนั้นทุก commit บน main จะอัปเดตเว็บเอง)</p>
+              <div class="flex flex-wrap gap-1.5 pt-1">
+                <a href="https://github.com/Mr-Green013/mitre-attack-playbooks/settings/pages" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-slate-950 border border-amber-500/40 font-semibold text-[11px] transition-all">⚙️ เปิดหน้า Settings → Pages ↗</a>
+              </div>
+            </div>
+
+            <div class="bg-slate-950/90 border border-slate-800 rounded-xl p-3 space-y-1.5">
+              <div class="font-bold text-cyan-300 text-xs">2️⃣ ลิงก์เข้าใช้งานตลอดเวลา (24/7 URL)</div>
+              <p class="text-[11px] text-slate-400 leading-relaxed">เมื่อเปิด GitHub Pages แล้ว (ใช้เวลา Build ประมาณ 1–2 นาที) คุณและทีมเข้าใช้งานผ่านลิงก์นี้ได้จากคอมพิวเตอร์และมือถือ:</p>
+              <div class="flex items-center gap-1.5 pt-1">
+                <a href="https://mr-green013.github.io/mitre-attack-playbooks/" target="_blank" rel="noopener noreferrer" class="flex-1 px-2.5 py-1.5 rounded-lg bg-cyan-500/20 hover:bg-cyan-500 text-cyan-300 hover:text-slate-950 border border-cyan-500/40 font-mono font-bold text-[10.5px] truncate text-center transition-all">🌐 mr-green013.github.io/mitre-attack-playbooks ↗</a>
+                <button onclick="copyOfficialUrl('https://mr-green013.github.io/mitre-attack-playbooks/')" class="px-2 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-[10.5px]">คัดลอก</button>
+              </div>
+            </div>
+
+            <div class="bg-slate-950/90 border border-slate-800 rounded-xl p-3 space-y-1.5">
+              <div class="font-bold text-indigo-300 text-xs">3️⃣ ติดตั้งเป็นแอป PWA / ซิงก์อัตโนมัติ</div>
+              <p class="text-[11px] text-slate-400 leading-relaxed">เมื่อเปิดผ่าน GitHub Pages (หรือ docker-compose) เบราว์เซอร์จะ cache ตัวเว็บไว้ใช้ตอนไม่มีเน็ต และติดตั้งเป็นแอปได้ ถ้าเบราว์เซอร์ไม่รองรับการติดตั้ง ปุ่มนี้จะดาวน์โหลดไฟล์ index.html แทน</p>
+              <div class="flex flex-wrap gap-1.5 pt-1">
+                <button onclick="installPwaOrDownloadOffline()" class="px-2.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-[11px] transition-all">📲 ติดตั้งแอป / ดาวน์โหลดไฟล์ถาวร</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Method 1: Direct Browser Push via GitHub REST API -->
         <div class="bg-indigo-950/30 border border-indigo-500/40 rounded-2xl p-4 space-y-3">
           <div class="flex flex-wrap items-center justify-between gap-2">
@@ -1279,6 +1367,85 @@ git commit -m "Feat: Add MITRE ATT&CK v20.0 Playbooks, SIEM Compliance & Network
 git branch -M main
 git push -u origin main</pre>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ALWAYS-ON 24/7 (OFFLINE + PWA + GITHUB PAGES + WORKSPACE BACKUP) MODAL -->
+  <div id="alwaysOnModal" class="hidden fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-4xl w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+      <div class="px-5 py-3.5 border-b border-slate-800 flex items-center justify-between bg-slate-950/80">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-300 font-bold">24/7</div>
+          <div>
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <span>ศูนย์ควบคุมการใช้งานตลอดเวลา 24/7 (Always-On Offline, Desktop PWA & GitHub Pages)</span>
+              <span id="netConnBadge" class="px-2 py-0.5 rounded-full text-[10px] font-mono bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">🟢 READY 24/7</span>
+            </h3>
+            <p class="text-[11px] text-slate-400">ใช้งานได้ 3 แบบ: ไฟล์เดี่ยวบนเครื่อง, แอปติดตั้งบนหน้าจอ (PWA) และเว็บบน GitHub Pages</p>
+          </div>
+        </div>
+        <button onclick="closeAlwaysOnModal()" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800">✕</button>
+      </div>
+
+      <div class="p-5 overflow-y-auto custom-scroll space-y-4 text-xs">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5">
+          <!-- Mode 1: Standalone Single-File Offline App -->
+          <div class="bg-slate-950/90 border border-emerald-500/35 rounded-2xl p-4 flex flex-col justify-between gap-3">
+            <div class="space-y-2">
+              <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">วิธีที่ 1 • ไม่ต้องง้อเซิร์ฟเวอร์</span>
+              <h4 class="text-sm font-bold text-white">💻 บันทึกไฟล์เดียวลงเครื่อง/USB (Standalone Portable App)</h4>
+              <p class="text-slate-300 leading-relaxed text-[11px]">ฐานข้อมูลทั้งหมด (18 Sub-domains, 935 TTPs, 182 กลุ่ม APT, 61 แคมเปญ และบทสนทนา) ถูกฝังอยู่ในไฟล์ HTML ไฟล์เดียวแล้ว ดาวน์โหลดเก็บไว้ในคอมพิวเตอร์หรือ Flash Drive แล้วดับเบิลคลิกเปิดได้ — ถ้าไม่มีอินเทอร์เน็ต ข้อมูลทั้งหมดยังใช้ได้ แต่หน้าตาจะเรียบลงเพราะโหลด Tailwind/Google Fonts จาก CDN ไม่ได้</p>
+            </div>
+            <button onclick="downloadRepoAsset('index.html')" class="w-full py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold shadow transition-all">
+              💾 ดาวน์โหลดไฟล์แอป (index.html)
+            </button>
+          </div>
+
+          <!-- Mode 2: 24/7 Cloud Hosting via GitHub Pages -->
+          <div class="bg-slate-950/90 border border-indigo-500/35 rounded-2xl p-4 flex flex-col justify-between gap-3">
+            <div class="space-y-2">
+              <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">วิธีที่ 2 • ออนไลน์ฟรี 24 ชม.</span>
+              <h4 class="text-sm font-bold text-white">🌐 เปิดลิงก์เว็บถาวรบน GitHub Pages (ฟรี 100%)</h4>
+              <p class="text-slate-300 leading-relaxed text-[11px]">เมื่อ Push ขึ้น Repo <code class="text-indigo-300">Mr-Green013/mitre-attack-playbooks</code> และเปิด <strong>GitHub Pages</strong> ที่ Settings → Pages (Branch: main, / root) ครั้งเดียว ทีมจะเข้าผ่านลิงก์นี้ได้จากทุกอุปกรณ์:</p>
+              <div class="bg-slate-900 border border-slate-800 rounded-lg p-2 font-mono text-[10.5px] text-amber-300 break-all">
+                https://mr-green013.github.io/mitre-attack-playbooks/
+              </div>
+            </div>
+            <button onclick="closeAlwaysOnModal(); openGitHubRepoModal();" class="w-full py-2 px-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold shadow transition-all">
+              🚀 ไปที่หน้า Push & สถานะ GitHub Pages
+            </button>
+          </div>
+
+          <!-- Mode 3: Installable Desktop/Mobile PWA & LocalStorage Backup -->
+          <div class="bg-slate-950/90 border border-cyan-500/35 rounded-2xl p-4 flex flex-col justify-between gap-3">
+            <div class="space-y-2">
+              <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">วิธีที่ 3 • สำรองและกู้คืนข้อมูล</span>
+              <h4 class="text-sm font-bold text-white">🔄 สำรองข้อมูลที่แก้ไขไว้ (Full State Snapshot)</h4>
+              <p class="text-slate-300 leading-relaxed text-[11px]">ทุกสิ่งที่คุณเพิ่มหรือปรับแต่ง (โหนดย่อย, กระดาน Mapping, กฎ SIEM Compliance, ผัง Network DFD) จะถูกจำไว้ในเบราว์เซอร์อัตโนมัติ และสามารถส่งออก/นำเข้าเป็นไฟล์ JSON เพื่อย้ายเครื่องได้ตลอดเวลา</p>
+            </div>
+            <div class="grid grid-cols-2 gap-1.5">
+              <button onclick="exportFullWorkspaceBackup()" class="py-2 px-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-[11px] transition-all">
+                📥 สำรองข้อมูล (.json)
+              </button>
+              <label class="py-2 px-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 font-bold text-[11px] text-center cursor-pointer transition-all">
+                📤 กู้คืนข้อมูล
+                <input type="file" accept=".json" onchange="importFullWorkspaceBackup(event)" class="hidden" />
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Local Server & PWA Instructions -->
+        <div class="bg-slate-950/90 border border-slate-800 rounded-2xl p-4 space-y-2">
+          <div class="font-bold text-amber-300 text-xs">⚡ ทิปเพิ่มเติม: วิธีรันเป็น Internal SOC Web Server ภายในองค์กร (ตลอด 24 ชม.)</div>
+          <p class="text-slate-300 text-[11px]">หากต้องการเปิดให้ทีม SOC ภายในองค์กรเข้าใช้งานร่วมกันผ่านเครือข่ายภายใน (Intranet) โดยไม่ต้องออกอินเทอร์เน็ต สามารถรันคำสั่งใดคำสั่งหนึ่งด้านล่างในโฟลเดอร์ที่แตกไฟล์ <code class="text-white">mitre-attack-playbooks-repo.zip</code> ได้ทันที:</p>
+          <pre class="bg-slate-900 border border-slate-800 rounded-xl p-2.5 font-mono text-[11px] text-emerald-300 overflow-x-auto"># 1. รันด้วย Python (มีในทุกเครื่อง Linux / macOS / Windows):
+python3 -m http.server 8080
+
+# 2. หรือรันด้วย Docker (ทำงานเบื้องหลังตลอด 24 ชม. พร้อม Auto-Restart):
+docker run -d --name mitre-studio --restart always -p 8080:80 -v $(pwd):/usr/share/nginx/html:ro nginx:alpine</pre>
         </div>
       </div>
     </div>
@@ -8233,9 +8400,246 @@ git push -u origin main</pre>
     // =========================================================================
     // 12. GITHUB REPOSITORY MIGRATION & 1-CLICK API PUSH (Mr-Green013/mitre-attack-playbooks)
     // =========================================================================
+    // Owner/repo and branch typed by the user end up in API URLs, so both are checked before any request.
+    const GH_REPO_RE = /^[A-Za-z0-9-]+\/[A-Za-z0-9._-]+$/;
+    const GH_BRANCH_RE = /^[A-Za-z0-9._\/-]+$/;
+
+    function readGitHubTarget() {
+      const repoFullName = (document.getElementById('ghRepoOwnerInput')?.value || 'Mr-Green013/mitre-attack-playbooks').trim().replace(/^https?:\/\/github\.com\//i, '').replace(/\/+$/, '');
+      const branch = (document.getElementById('ghBranchInput')?.value || 'main').trim();
+      const token = (document.getElementById('ghTokenInput')?.value || '').trim();
+      const valid = GH_REPO_RE.test(repoFullName) && GH_BRANCH_RE.test(branch) && !branch.includes('..');
+      return { repoFullName, branch, token, valid };
+    }
+
+    async function checkLiveGitHubRepoStatus() {
+      const { repoFullName, token, valid } = readGitHubTarget();
+      const badgeEl = document.getElementById('liveRepoBadge');
+      const listEl = document.getElementById('liveRepoFilesList');
+      const setBadge = (text, cls) => {
+        if (!badgeEl) return;
+        badgeEl.textContent = text;
+        badgeEl.className = cls;
+      };
+      if (!valid) {
+        setBadge('⚠️ ชื่อ Repository หรือ Branch ไม่ถูกต้อง', 'px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 font-mono text-[10px]');
+        return;
+      }
+      const headers = { 'Accept': 'application/vnd.github+json' };
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+
+      setBadge('⏳ กำลังเช็ก GitHub API...', 'px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono text-[10px]');
+      try {
+        const res = await fetch(`https://api.github.com/repos/${repoFullName}`, { headers });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const repoData = await res.json();
+        const contentsRes = await fetch(`https://api.github.com/repos/${repoFullName}/contents`, { headers });
+        const files = contentsRes.ok ? await contentsRes.json() : [];
+        const fileNames = Array.isArray(files) ? files.map(f => String(f?.name ?? '')) : [];
+        const hasIndex = fileNames.includes('index.html');
+        const hasPages = Boolean(repoData.has_pages);
+        const [ownerName, repoShort] = repoFullName.split('/');
+        const pagesUrl = `https://${ownerName.toLowerCase()}.github.io/${repoShort}/`;
+
+        setBadge(
+          hasPages ? '🟢 REPO & GITHUB PAGES ACTIVE' : (hasIndex ? '🟡 อัปไฟล์แล้ว (รอเปิด GitHub Pages)' : '🟠 เชื่อมต่อ Repo แล้ว (รอไฟล์ index.html)'),
+          hasPages
+            ? 'px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono text-[10px] font-bold'
+            : 'px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 font-mono text-[10px] font-bold'
+        );
+        if (listEl) {
+          // File names come from the repository (any committer can choose them), so they are added as text nodes only.
+          listEl.replaceChildren();
+          const filesRow = document.createElement('div');
+          const filesLabel = document.createElement('strong');
+          filesLabel.textContent = `ไฟล์ใน Repo ปัจจุบัน (${fileNames.length} รายการ):`;
+          filesRow.append('📂 ', filesLabel, ' ');
+          if (fileNames.length) {
+            fileNames.forEach(n => {
+              const code = document.createElement('code');
+              code.className = 'px-1.5 py-0.5 rounded bg-slate-900 text-emerald-300 border border-slate-800 mr-1';
+              code.textContent = n;
+              filesRow.append(code);
+            });
+          } else {
+            const none = document.createElement('span');
+            none.className = 'text-rose-300';
+            none.textContent = 'ยังไม่มีไฟล์ในกิ่งหลัก';
+            filesRow.append(none);
+          }
+          const pagesRow = document.createElement('div');
+          pagesRow.className = 'mt-1';
+          const pagesLabel = document.createElement('strong');
+          pagesLabel.textContent = 'สถานะ GitHub Pages:';
+          pagesRow.append('🌐 ', pagesLabel, ' ');
+          if (hasPages) {
+            const link = document.createElement('a');
+            link.href = pagesUrl;
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+            link.className = 'text-emerald-300 underline font-bold';
+            link.textContent = `${pagesUrl} (เปิดใช้งานแล้ว) ↗`;
+            pagesRow.append(link);
+          } else {
+            const hint = document.createElement('span');
+            hint.className = 'text-amber-300';
+            hint.textContent = 'ยังไม่ได้เปิด — กดปุ่ม "⚙️ เปิดหน้า Settings → Pages" ด้านล่าง แล้วเลือก Branch: main → Save';
+            pagesRow.append(hint);
+          }
+          listEl.append(filesRow, pagesRow);
+        }
+      } catch (err) {
+        setBadge('ℹ️ Repo อาจเป็น Private หรือต้องใส่ Token', 'px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-mono text-[10px]');
+        if (listEl) {
+          listEl.textContent = `ตรวจสอบ ${repoFullName} ไม่สำเร็จ (${err.message}) — ถ้าเป็น Private repo ให้วาง GitHub Token ก่อน หรือเปิดหน้า Settings → Pages ด้วยตัวเอง`;
+        }
+      }
+    }
+
+    async function pullPlaybooksFromGitHubRepo() {
+      const { repoFullName, branch, valid } = readGitHubTarget();
+      if (!valid) {
+        showToast('ชื่อ Repository ต้องอยู่ในรูปแบบ owner/repo และชื่อ branch ต้องไม่มีอักขระพิเศษ');
+        return;
+      }
+      if (!confirm(`ดึงข้อมูลจาก ${repoFullName} (${branch}) จะเขียนทับ SIEM Compliance, Mapping Studio และผัง Network ที่อยู่ในเบราว์เซอร์นี้\nแนะนำให้กด "สำรองข้อมูล" ก่อน — ดำเนินการต่อหรือไม่?`)) return;
+      const rawUrl = `https://raw.githubusercontent.com/${repoFullName}/${branch}/playbooks/mitre_playbooks_v20.json`;
+      try {
+        showToast('กำลังดึงข้อมูล Playbooks ล่าสุดจาก GitHub Repo...');
+        const res = await fetch(rawUrl);
+        if (!res.ok) throw new Error(`ไม่พบไฟล์ playbooks/mitre_playbooks_v20.json บนกิ่ง ${branch}`);
+        // The file comes from whichever repo the user typed, so it is treated like any other untrusted input.
+        const data = sanitizeDeep(await res.json()) || {};
+        if (Array.isArray(data.siemComplianceMappings) && data.siemComplianceMappings.length) {
+          siemComplianceRules = data.siemComplianceMappings;
+          saveComplianceState();
+          renderComplianceWorkspace();
+        }
+        if (data.customAttackFlowMapping && Array.isArray(data.customAttackFlowMapping.nodes)) {
+          mapperNodes = data.customAttackFlowMapping.nodes;
+          mapperEdges = Array.isArray(data.customAttackFlowMapping.edges) ? data.customAttackFlowMapping.edges : [];
+          saveMapperState();
+          renderMapperWorkspace();
+        }
+        if (data.networkTopologyAndDfd && Array.isArray(data.networkTopologyAndDfd.nodes)) {
+          netNodes = data.networkTopologyAndDfd.nodes;
+          netEdges = Array.isArray(data.networkTopologyAndDfd.edges) ? data.networkTopologyAndDfd.edges : [];
+          saveNetTopologyState();
+          renderNetTopologyWorkspace();
+        }
+        showToast('✅ ซิงก์ข้อมูล Playbooks, SIEM Compliance และผัง DFD จาก GitHub Repo สำเร็จแล้ว!');
+      } catch (err) {
+        showToast('ℹ️ ' + err.message);
+      }
+    }
+
+    let deferredPwaPrompt = null;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPwaPrompt = e;
+    });
+
+    function installPwaOrDownloadOffline() {
+      if (deferredPwaPrompt) {
+        deferredPwaPrompt.prompt();
+        deferredPwaPrompt = null;
+      } else {
+        downloadRepoAsset('index.html');
+      }
+    }
+
+    function openAlwaysOnModal() {
+      const m = document.getElementById('alwaysOnModal');
+      if (m) m.classList.remove('hidden');
+      updateNetworkStatusBadge();
+    }
+
+    function closeAlwaysOnModal() {
+      const m = document.getElementById('alwaysOnModal');
+      if (m) m.classList.add('hidden');
+    }
+
+    function updateNetworkStatusBadge() {
+      const b = document.getElementById('netConnBadge');
+      if (!b) return;
+      const online = navigator.onLine !== false;
+      b.textContent = online ? '🟢 ONLINE' : '🛡️ OFFLINE (ใช้ไฟล์ที่ cache ไว้)';
+    }
+
+    function exportFullWorkspaceBackup() {
+      const snapshot = {
+        app: 'MITRE ATT&CK v20.0 Interactive Studio',
+        exportedAt: new Date().toISOString(),
+        nodeUserStatus,
+        customUserEdits,
+        mapperNodes,
+        mapperEdges,
+        siemComplianceRules,
+        netNodes,
+        netEdges
+      };
+      const blob = new Blob([JSON.stringify(snapshot, null, 2)], { type: 'application/json;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'mitre_studio_full_backup.json';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('สำรองข้อมูลการตั้งค่าและแผนผังทั้งหมด (mitre_studio_full_backup.json) เรียบร้อยแล้ว!');
+    }
+
+    function importFullWorkspaceBackup(ev) {
+      const file = ev?.target?.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          // A backup file can come from anyone, so it goes through the same sanitizer as localStorage.
+          const data = sanitizeDeep(JSON.parse(String(reader.result || '{}')));
+          if (!data || typeof data !== 'object' || Array.isArray(data)) throw new Error('ไม่ใช่ไฟล์สำรองของ MITRE Studio');
+          if (!confirm('การนำเข้าจะเขียนทับข้อมูลที่บันทึกไว้ในเบราว์เซอร์นี้ ดำเนินการต่อหรือไม่?')) return;
+          const isPlainObject = v => v && typeof v === 'object' && !Array.isArray(v);
+          if (isPlainObject(data.nodeUserStatus)) {
+            nodeUserStatus = data.nodeUserStatus;
+            localStorage.setItem('mitre_mindmap_status_v1', JSON.stringify(nodeUserStatus));
+          }
+          if (isPlainObject(data.customUserEdits)) {
+            customUserEdits = data.customUserEdits;
+            localStorage.setItem('mitre_custom_edits_v1', JSON.stringify(customUserEdits));
+          }
+          if (Array.isArray(data.mapperNodes)) {
+            mapperNodes = data.mapperNodes;
+            mapperEdges = Array.isArray(data.mapperEdges) ? data.mapperEdges : [];
+            saveMapperState();
+          }
+          if (Array.isArray(data.siemComplianceRules)) {
+            siemComplianceRules = data.siemComplianceRules;
+            saveComplianceState();
+          }
+          if (Array.isArray(data.netNodes)) {
+            netNodes = data.netNodes;
+            netEdges = Array.isArray(data.netEdges) ? data.netEdges : [];
+            saveNetTopologyState();
+          }
+          renderMindMap();
+          renderMapperWorkspace();
+          renderComplianceWorkspace();
+          renderNetTopologyWorkspace();
+          showToast('กู้คืนข้อมูลแผนผังและการตั้งค่าทั้งหมดสำเร็จแล้ว!');
+        } catch (err) {
+          showToast('ไฟล์สำรองข้อมูลไม่ถูกต้อง: ' + err.message);
+        }
+      };
+      reader.readAsText(file);
+      ev.target.value = '';
+    }
+
     function openGitHubRepoModal() {
       const m = document.getElementById('githubRepoModal');
       if (m) m.classList.remove('hidden');
+      checkLiveGitHubRepoStatus();
     }
 
     function closeGitHubRepoModal() {
@@ -8300,6 +8704,11 @@ ${buildPlaybookIndexMarkdown()}
 2. ไปที่เมนู **Settings → Pages** ของ Repository
 3. เลือก **Source: Deploy from a branch** และเลือกกิ่ง **\`main\`** โฟลเดอร์ **\`/ (root)\`** แล้วกด **Save**
 4. เข้าใช้งานเว็บแอปได้ที่: \`https://mr-green013.github.io/mitre-attack-playbooks/\`
+
+## 📴 Offline / ติดตั้งเป็นแอป / Self-host
+- เปิดผ่าน GitHub Pages ครั้งหนึ่ง แล้ว \`sw.js\` จะ cache ตัวเว็บและ \`playbooks/mitre_playbooks_v20.json\` ไว้ใช้ตอนไม่มีเน็ต และติดตั้งเป็นแอป (PWA) ได้ผ่าน \`manifest.json\`
+- รันในเครือข่ายภายใน: \`docker compose up -d\` แล้วเปิด \`http://localhost:8080\` (mount เฉพาะไฟล์เว็บ ไม่เปิด \`.git\`)
+- สำรอง/กู้คืนงานที่แก้ในเบราว์เซอร์ได้จากปุ่ม **Offline / PWA / สำรองข้อมูล** — ไฟล์ที่นำเข้าผ่านการกรองอักขระเหมือนข้อมูลใน localStorage
 `;
     }
 
@@ -8310,10 +8719,6 @@ ${buildPlaybookIndexMarkdown()}
         exportedAt: new Date().toISOString(),
         rolePlaybooks: PLAYBOOK_DATA,
         aptProfiles: APT_PROFILES,
-        adversaryCommunications: typeof ADVERSARY_COMMUNICATIONS_DB !== "undefined" ? ADVERSARY_COMMUNICATIONS_DB : [],
-        attackMethodsArsenal: typeof ATTACK_METHODS_ARSENAL_DB !== "undefined" ? ATTACK_METHODS_ARSENAL_DB : [],
-        allMitreGroups: MITRE_FULL_DB.groups || [],
-        allMitreCampaigns: MITRE_FULL_DB.campaigns || [],
         siemComplianceMappings: siemComplianceRules,
         customAttackFlowMapping: {
           nodes: mapperNodes,
@@ -8407,18 +8812,13 @@ ${buildPlaybookIndexMarkdown()}
     }
 
     async function pushAllFilesToGitHubRepo() {
-      const repoEl = document.getElementById('ghRepoOwnerInput');
-      const branchEl = document.getElementById('ghBranchInput');
-      const tokenEl = document.getElementById('ghTokenInput');
       const statusEl = document.getElementById('ghPushStatusText');
       const btnEl = document.getElementById('ghPushActionBtn');
 
-      const repoFullName = (repoEl?.value || 'Mr-Green013/mitre-attack-playbooks').trim().replace(/^https?:\/\/github\.com\//i, '').replace(/\/+$/, '');
-      const branch = (branchEl?.value || 'main').trim();
-      const token = (tokenEl?.value || '').trim();
+      const { repoFullName, branch, token, valid } = readGitHubTarget();
 
       // repoFullName and branch are placed into API URLs and the status innerHTML below.
-      if (!/^[A-Za-z0-9-]+\/[A-Za-z0-9._-]+$/.test(repoFullName) || !/^[A-Za-z0-9._\/-]+$/.test(branch)) {
+      if (!valid) {
         showToast('ชื่อ Repository ต้องอยู่ในรูปแบบ owner/repo และชื่อ branch ต้องไม่มีอักขระพิเศษ');
         if (statusEl) statusEl.textContent = '⚠️ ชื่อ Repository หรือ Branch ไม่ถูกต้อง';
         return;
@@ -8445,8 +8845,10 @@ ${buildPlaybookIndexMarkdown()}
         if (statusEl) statusEl.textContent = '⏳ [3/3] กำลังอัปโหลด index.html (Web App หลัก)...';
         await pushSingleFileToGitHub(repoFullName, branch, token, 'index.html', fullHtml, 'Feat: Deploy MITRE ATT&CK v20.0 All-in-One Interactive Studio');
 
+        const [ownerName, repoShort] = repoFullName.split('/');
+        const pagesUrl = `https://${ownerName.toLowerCase()}.github.io/${repoShort}/`;
         if (statusEl) {
-          statusEl.innerHTML = `✅ ย้ายขึ้น <a href="https://github.com/${repoFullName}" target="_blank" class="text-emerald-300 underline font-bold">${repoFullName}</a> สำเร็จครบทุกไฟล์!`;
+          statusEl.innerHTML = `✅ อัปโหลดขึ้น <a href="https://github.com/${repoFullName}" target="_blank" rel="noopener noreferrer" class="text-emerald-300 underline font-bold">${repoFullName}</a> สำเร็จ — ถ้าเปิด GitHub Pages ไว้แล้ว เว็บจะอัปเดตที่ <a href="${pagesUrl}" target="_blank" rel="noopener noreferrer" class="text-amber-300 underline font-bold">${pagesUrl}</a> ภายใน 1–2 นาที`;
         }
         showToast(`Push ไฟล์ทั้งหมดขึ้น ${repoFullName} สำเร็จแล้ว!`);
       } catch (err) {
@@ -8459,6 +8861,13 @@ ${buildPlaybookIndexMarkdown()}
 
     window.addEventListener('DOMContentLoaded', () => {
       initMapperState();
+      window.addEventListener('online', updateNetworkStatusBadge);
+      window.addEventListener('offline', updateNetworkStatusBadge);
+      // Service workers must be served from the site itself (blob: URLs are rejected), so offline mode
+      // only exists when the page is hosted (GitHub Pages / docker-compose), not when opened via file://.
+      if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      }
       initComplianceState();
       initNetTopologyState();
       renderAptView();
