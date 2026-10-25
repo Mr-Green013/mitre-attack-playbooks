@@ -1234,7 +1234,7 @@
             </div>
             <a href="https://github.com/settings/tokens/new?scopes=repo&description=MITRE-Playbooks-Deploy" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-indigo-300 border border-indigo-500/30 text-[11px]">🔑 สร้าง GitHub Token (คลิกที่นี่) ↗</a>
           </div>
-          <p class="text-slate-300 leading-relaxed">ใส่รหัส <strong>GitHub Personal Access Token (PAT)</strong> ของบัญชี <code class="text-amber-300">Mr-Green013</code> ที่มีสิทธิ์ <code class="text-emerald-300">repo</code> หรือ <code class="text-emerald-300">Contents: Read & Write</code> แล้วกดปุ่มด้านล่าง ระบบจะสร้างและอัปเดตไฟล์ <code class="text-white">index.html</code>, <code class="text-white">mitre_attack_mindmap.html</code>, <code class="text-white">README.md</code> และ <code class="text-white">playbooks/mitre_playbooks_v20.json</code> เข้าสู่ Repo ทันที</p>
+          <p class="text-slate-300 leading-relaxed">ใส่รหัส <strong>GitHub Personal Access Token (PAT)</strong> ของบัญชี <code class="text-amber-300">Mr-Green013</code> แนะนำให้ใช้ <strong>fine-grained token</strong> ที่จำกัดเฉพาะ repo นี้ สิทธิ์ <code class="text-emerald-300">Contents: Read & Write</code> และหมดอายุสั้น (Token ไม่ถูกบันทึกลงเครื่อง) แล้วกดปุ่มด้านล่าง ระบบจะ<strong>เขียนทับ</strong>ไฟล์ <code class="text-white">index.html</code>, <code class="text-white">README.md</code> และ <code class="text-white">playbooks/mitre_playbooks_v20.json</code> ใน Repo ทันที</p>
           <div class="grid grid-cols-1 sm:grid-cols-4 gap-2">
             <input id="ghRepoOwnerInput" type="text" value="Mr-Green013/mitre-attack-playbooks" class="bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 font-mono text-xs outline-none" placeholder="Owner/Repo" />
             <input id="ghBranchInput" type="text" value="main" class="bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 font-mono text-xs outline-none" placeholder="Branch (เช่น main)" />
@@ -4087,11 +4087,31 @@ git push -u origin main</pre>
     let hoveredNodeId = null;
     const customNodeOffsets = new Map();
 
+    // User-entered text is rendered through innerHTML, sometimes inside onclick='...' attributes where
+    // HTML entities are decoded back into quotes, so markup and quote characters are swapped for
+    // full-width look-alikes instead of being entity-escaped.
+    const UNSAFE_TEXT_CHARS = { '<': '＜', '>': '＞', '"': '＂', "'": '＇', '`': '｀', '&': '＆', '\\': '＼' };
+    function safeText(value) {
+      return String(value == null ? '' : value).replace(/[<>"'`&\\]/g, ch => UNSAFE_TEXT_CHARS[ch]);
+    }
+
+    // Applies safeText to every string inside state restored from localStorage, which may predate this fix.
+    function sanitizeDeep(value) {
+      if (typeof value === 'string') return safeText(value);
+      if (Array.isArray(value)) return value.map(sanitizeDeep);
+      if (value && typeof value === 'object') {
+        const out = {};
+        Object.keys(value).forEach(k => { out[safeText(k)] = sanitizeDeep(value[k]); });
+        return out;
+      }
+      return value;
+    }
+
     // Custom user-added or edited subtechnique notes/nodes persisted in localStorage
     let customUserEdits = {};
     try {
       const savedEdits = localStorage.getItem('mitre_custom_edits_v1');
-      if (savedEdits) customUserEdits = JSON.parse(savedEdits);
+      if (savedEdits) customUserEdits = sanitizeDeep(JSON.parse(savedEdits));
     } catch (e) {
       customUserEdits = {};
     }
@@ -4636,7 +4656,7 @@ git push -u origin main</pre>
     let nodeUserStatus = {};
     try {
       const saved = localStorage.getItem('mitre_mindmap_status_v1');
-      if (saved) nodeUserStatus = JSON.parse(saved);
+      if (saved) nodeUserStatus = sanitizeDeep(JSON.parse(saved));
     } catch (e) {
       nodeUserStatus = {};
     }
@@ -5485,8 +5505,8 @@ git push -u origin main</pre>
       if (!parent) return;
       const titleEl = document.getElementById('customSubTitleInput');
       const bodyEl = document.getElementById('customSubBodyInput');
-      const title = (titleEl ? titleEl.value.trim() : '') || `เนื้อหาเพิ่มเติมของ ${parent.code}`;
-      const body = (bodyEl ? bodyEl.value.trim() : '') || 'รายละเอียดเพิ่มเติมที่ผู้ใช้บันทึกไว้';
+      const title = safeText((titleEl ? titleEl.value.trim() : '') || `เนื้อหาเพิ่มเติมของ ${parent.code}`);
+      const body = safeText((bodyEl ? bodyEl.value.trim() : '') || 'รายละเอียดเพิ่มเติมที่ผู้ใช้บันทึกไว้');
 
       if (!parent.children) parent.children = [];
       const newId = `${parent.id}-CUSTOM-${Date.now().toString().slice(-4)}`;
@@ -5527,8 +5547,8 @@ git push -u origin main</pre>
       if (!node) return;
       const titleEl = document.getElementById('customSubTitleInput');
       const bodyEl = document.getElementById('customSubBodyInput');
-      const title = titleEl ? titleEl.value.trim() : '';
-      const body = bodyEl ? bodyEl.value.trim() : '';
+      const title = safeText(titleEl ? titleEl.value.trim() : '');
+      const body = safeText(bodyEl ? bodyEl.value.trim() : '');
       if (!title && !body) {
         showToast('กรุณากรอกหัวข้อหรือรายละเอียดที่ต้องการเพิ่มก่อนครับ');
         return;
@@ -6817,7 +6837,7 @@ git push -u origin main</pre>
       try {
         const saved = localStorage.getItem('mitre_mapper_workspace_v1');
         if (saved) {
-          const parsed = JSON.parse(saved);
+          const parsed = sanitizeDeep(JSON.parse(saved));
           if (parsed && Array.isArray(parsed.nodes) && parsed.nodes.length > 0) {
             mapperNodes = parsed.nodes;
             mapperEdges = parsed.edges || [];
@@ -7120,9 +7140,9 @@ git push -u origin main</pre>
       const descEl = document.getElementById('customMapNodeDesc');
 
       const category = typeEl ? typeEl.value : 'ttp';
-      const title = (titleEl ? titleEl.value.trim() : '') || 'Custom Mapping Node';
-      const code = (codeEl ? codeEl.value.trim() : '') || `${category.toUpperCase().slice(0, 3)}-${mapperNodes.length + 1}`;
-      const desc = (descEl ? descEl.value.trim() : '') || 'โหนดที่สร้างขึ้นเองใน Mapping Studio';
+      const title = safeText((titleEl ? titleEl.value.trim() : '') || 'Custom Mapping Node');
+      const code = safeText((codeEl ? codeEl.value.trim() : '') || `${category.toUpperCase().slice(0, 3)}-${mapperNodes.length + 1}`);
+      const desc = safeText((descEl ? descEl.value.trim() : '') || 'โหนดที่สร้างขึ้นเองใน Mapping Studio');
 
       const idx = mapperNodes.length;
       const newId = `CUST-${Date.now().toString().slice(-4)}`;
@@ -7162,7 +7182,7 @@ git push -u origin main</pre>
         id: `E-${Date.now().toString().slice(-5)}`,
         from: srcEl.value,
         to: dstEl.value,
-        label: (lblEl && lblEl.value.trim()) ? lblEl.value.trim() : 'นำไปสู่'
+        label: (lblEl && lblEl.value.trim()) ? safeText(lblEl.value.trim()) : 'นำไปสู่'
       });
       saveMapperState();
       renderMapperWorkspace();
@@ -7532,7 +7552,7 @@ git push -u origin main</pre>
       try {
         const saved = localStorage.getItem('mitre_compliance_rules_v1');
         if (saved) {
-          const parsed = JSON.parse(saved);
+          const parsed = sanitizeDeep(JSON.parse(saved));
           if (Array.isArray(parsed) && parsed.length > 0) {
             siemComplianceRules = parsed;
             return;
@@ -7577,13 +7597,13 @@ git push -u origin main</pre>
       const nistEl = document.getElementById('newSiemNist');
       const pdpaEl = document.getElementById('newSiemPdpa');
 
-      const title = (titleEl && titleEl.value.trim()) || 'Custom SIEM Detection Rule';
-      const logSource = (logEl && logEl.value.trim()) || 'Custom SIEM / EDR Telemetry';
-      const tactic = (tacEl && tacEl.value) || 'TA0001';
-      const techs = ((techEl && techEl.value.trim()) || 'T1059').split(',').map(s => s.trim()).filter(Boolean);
-      const iso = ((isoEl && isoEl.value.trim()) || 'A.8.16').split(',').map(s => s.trim()).filter(Boolean);
-      const nist = ((nistEl && nistEl.value.trim()) || 'DE.CM-01').split(',').map(s => s.trim()).filter(Boolean);
-      const pdpa = (pdpaEl && pdpaEl.value.trim()) || 'ม.37(1) มาตรการรักษาความมั่นคงปลอดภัย';
+      const title = safeText((titleEl && titleEl.value.trim()) || 'Custom SIEM Detection Rule');
+      const logSource = safeText((logEl && logEl.value.trim()) || 'Custom SIEM / EDR Telemetry');
+      const tactic = safeText((tacEl && tacEl.value) || 'TA0001');
+      const techs = ((techEl && techEl.value.trim()) || 'T1059').split(',').map(s => safeText(s.trim())).filter(Boolean);
+      const iso = ((isoEl && isoEl.value.trim()) || 'A.8.16').split(',').map(s => safeText(s.trim())).filter(Boolean);
+      const nist = ((nistEl && nistEl.value.trim()) || 'DE.CM-01').split(',').map(s => safeText(s.trim())).filter(Boolean);
+      const pdpa = safeText((pdpaEl && pdpaEl.value.trim()) || 'ม.37(1) มาตรการรักษาความมั่นคงปลอดภัย');
 
       const newRule = {
         id: `UC-${siemComplianceRules.length + 1}`,
@@ -7827,7 +7847,7 @@ git push -u origin main</pre>
       try {
         const saved = localStorage.getItem('mitre_netmap_workspace_v1');
         if (saved) {
-          const parsed = JSON.parse(saved);
+          const parsed = sanitizeDeep(JSON.parse(saved));
           if (parsed && Array.isArray(parsed.nodes) && parsed.nodes.length > 0) {
             netNodes = parsed.nodes;
             netEdges = parsed.edges || [];
@@ -8112,10 +8132,10 @@ git push -u origin main</pre>
 
       netNodes.push({
         id: `NET-${Date.now().toString().slice(-4)}`,
-        name: (nameEl && nameEl.value.trim()) || 'New Network Host',
-        ip: (ipEl && ipEl.value.trim()) || '10.10.10.50/24',
-        ports: (portsEl && portsEl.value.trim()) || 'TCP 443',
-        mitre: (mitreEl && mitreEl.value.trim()) || 'T1021',
+        name: safeText((nameEl && nameEl.value.trim()) || 'New Network Host'),
+        ip: safeText((ipEl && ipEl.value.trim()) || '10.10.10.50/24'),
+        ports: safeText((portsEl && portsEl.value.trim()) || 'TCP 443'),
+        mitre: safeText((mitreEl && mitreEl.value.trim()) || 'T1021'),
         type,
         zone,
         x: zoneXMap[zone] || 775,
@@ -8132,7 +8152,7 @@ git push -u origin main</pre>
     function addNetTopologyEdge() {
       const from = document.getElementById('netEdgeFrom')?.value;
       const to = document.getElementById('netEdgeTo')?.value;
-      const proto = document.getElementById('netEdgeProto')?.value || 'HTTPS :443';
+      const proto = safeText(document.getElementById('netEdgeProto')?.value || 'HTTPS :443');
       const dataClass = document.getElementById('netEdgeDataClass')?.value || 'normal';
       if (!from || !to || from === to) {
         showToast('กรุณาเลือกโหนดต้นทางและปลายทางให้ถูกต้องครับ');
@@ -8223,6 +8243,37 @@ git push -u origin main</pre>
       if (m) m.classList.add('hidden');
     }
 
+    // Links to the Markdown playbooks kept in the repo; README.md is regenerated on every in-page push,
+    // so this section must live here or it disappears from the repository README.
+    function buildPlaybookIndexMarkdown() {
+      const tactics = [
+        ['01', 'TA0043 Reconnaissance', '01-reconnaissance'], ['02', 'TA0042 Resource Development', '02-resource-development'],
+        ['03', 'TA0001 Initial Access', '03-initial-access'], ['04', 'TA0002 Execution', '04-execution'],
+        ['05', 'TA0003 Persistence', '05-persistence'], ['06', 'TA0004 Privilege Escalation', '06-privilege-escalation'],
+        ['07', 'TA0005 Stealth', '07-stealth'], ['08', 'TA0112 Defense Impairment', '08-defense-impairment'],
+        ['09', 'TA0006 Credential Access', '09-credential-access'], ['10', 'TA0007 Discovery', '10-discovery'],
+        ['11', 'TA0008 Lateral Movement', '11-lateral-movement'], ['12', 'TA0009 Collection', '12-collection'],
+        ['13', 'TA0011 Command and Control', '13-command-and-control'], ['14', 'TA0010 Exfiltration', '14-exfiltration'],
+        ['15', 'TA0040 Impact', '15-impact']
+      ];
+      return [
+        '## 📘 Playbooks: วิธีการทำงาน / วิธีตรวจสอบ (KQL) / วิธีรับมือ',
+        '',
+        'คู่มือ Markdown แยกราย Tactic สำหรับ SOC / IR: แต่ละ Technique มีวิธีทำงานของผู้โจมตี, สัญญาณที่ต้องดู, KQL สำหรับ Microsoft Sentinel / Defender XDR, ขั้นตอนรับมือ และมาตรการป้องกันระยะยาว',
+        '',
+        '- [วิธีใช้คู่มือ, IR lifecycle, ระดับความรุนแรง, Log ที่ต้องเปิด](docs/00-how-to-use.md)',
+        '- [Mobile (Android / iOS) — 12 Tactics](mobile/README.md)',
+        '- [ICS / OT — 12 Tactics + ICS Assets A0001–A0018](ics/README.md)',
+        '- [แม่แบบสำหรับเพิ่ม Technique ใหม่](templates/tactic-template.md)',
+        '',
+        '| # | Enterprise Tactic | Playbook |',
+        '|---|---|---|',
+        ...tactics.map(([n, name, file]) => `| ${n} | ${name} | [enterprise/${file}.md](enterprise/${file}.md) |`),
+        '',
+        '> KQL ทุกชุดเป็นจุดเริ่มต้นสำหรับ hunting — ทดสอบกับข้อมูลจริงใน tenant และปรับ threshold ก่อนตั้งเป็น Analytics Rule'
+      ].join('\n');
+    }
+
     function buildRepoReadmeContent() {
       return `# 🛡️ MITRE ATT&CK® v20.0 Playbooks, SIEM Compliance & Network DFD Studio
 
@@ -8241,6 +8292,8 @@ git push -u origin main</pre>
 6. **🗺️ Custom Mapping Studio & Auto-Mapper**: แปลงข้อความ Incident Log / Command Line ให้เป็นกราฟ Attack Flow อัตโนมัติ
 7. **🛡️ SIEM & Compliance Coverage Heatmap**: แมปความเชื่อมโยงระหว่าง **SIEM Use Cases / Log Sources ↔ MITRE ATT&CK® v20.0 ↔ ISO/IEC 27001:2022 ↔ NIST CSF 2.0 ↔ PDPA Thailand (พ.ร.บ. คุ้มครองข้อมูลส่วนบุคคล มาตรา 37)** พร้อมคำนวณเปอร์เซ็นต์ความครอบคลุมราย Tactic
 8. **🌐 Network Topology & Data Flow Diagram (DFD) Studio**: วาดผังเครือข่ายแบ่งตาม 5 Security Zones (IP/Subnet/Server Dependency) และจำลองรัศมีผลกระทบเมื่อถูกเจาะ (**Blast Radius Simulation**)
+
+${buildPlaybookIndexMarkdown()}
 
 ## 🌐 การเปิดใช้งานผ่าน GitHub Pages
 1. อัปโหลดไฟล์ทั้งหมดในโปรเจกต์นี้ขึ้นที่ [https://github.com/Mr-Green013/mitre-attack-playbooks](https://github.com/Mr-Green013/mitre-attack-playbooks)
@@ -8363,6 +8416,13 @@ git push -u origin main</pre>
       const repoFullName = (repoEl?.value || 'Mr-Green013/mitre-attack-playbooks').trim().replace(/^https?:\/\/github\.com\//i, '').replace(/\/+$/, '');
       const branch = (branchEl?.value || 'main').trim();
       const token = (tokenEl?.value || '').trim();
+
+      // repoFullName and branch are placed into API URLs and the status innerHTML below.
+      if (!/^[A-Za-z0-9-]+\/[A-Za-z0-9._-]+$/.test(repoFullName) || !/^[A-Za-z0-9._\/-]+$/.test(branch)) {
+        showToast('ชื่อ Repository ต้องอยู่ในรูปแบบ owner/repo และชื่อ branch ต้องไม่มีอักขระพิเศษ');
+        if (statusEl) statusEl.textContent = '⚠️ ชื่อ Repository หรือ Branch ไม่ถูกต้อง';
+        return;
+      }
 
       if (!token) {
         showToast('กรุณาวาง GitHub Personal Access Token ก่อนกดปุ่ม Push ครับ');
