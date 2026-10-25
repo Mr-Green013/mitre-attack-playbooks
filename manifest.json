@@ -1,0 +1,13 @@
+{
+  "name": "MITRE ATT&CK® v20.0 All-in-One Interactive Studio & Playbooks",
+  "short_name": "MITRE v20 Studio",
+  "description": "18 Sub-domains, 39 Tactics, 935 TTPs, 182 APT Groups, 61 Campaigns, SIEM Compliance & Network DFD Studio",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#020617",
+  "theme_color": "#4f46e5",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
