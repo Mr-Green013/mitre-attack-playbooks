@@ -4,6 +4,7 @@
 [![Threat Groups](https://img.shields.io/badge/APT%20Groups-182%20Groups%20%2B%2016%20Deep%20Dossiers-rose)](https://attack.mitre.org/groups/)
 [![Campaigns](https://img.shields.io/badge/Campaigns-61%20Official%20Campaigns-cyan)](https://attack.mitre.org/campaigns/)
 [![Adversary Comms](https://img.shields.io/badge/Adversary%20Dialogues-Vishing%20%7C%20Teams%20%7C%20Tor%20Ransomware-amber)](https://github.com/Mr-Green013/mitre-attack-playbooks)
+[![License: MIT](https://img.shields.io/badge/Code-MIT-green)](LICENSE) [![License: CC BY 4.0](https://img.shields.io/badge/Content-CC%20BY%204.0-lightgrey)](LICENSE-docs.md)
 
 คลังฐานข้อมูลและเว็บแอปพลิเคชันแบบโต้ตอบ **MITRE ATT&CK® v20.0** ฉบับสมบูรณ์สำหรับทีม **SOC / Blue Team**, **Red Team / Pentest**, **Cyber Threat Intelligence (CTI)** และ **CISO / Compliance**
 
@@ -76,3 +77,8 @@
 - ปุ่ม **Push to GitHub** ในหน้าเว็บส่ง Personal Access Token จากเบราว์เซอร์ไปที่ `api.github.com` โดยตรง (ไม่ได้เก็บลงเครื่อง) — ใช้ **fine-grained token** ที่จำกัดเฉพาะ repo นี้ สิทธิ์ *Contents: Read and write* และตั้งวันหมดอายุสั้น
 - ปุ่มนี้เขียนทับ `README.md`, `index.html` และ `playbooks/mitre_playbooks_v20.json` ใน repo ทุกครั้งที่กด
 - หน้าเว็บโหลด Tailwind (play CDN) และ Google Fonts จากภายนอก
+
+## 📄 License
+- **Source code** (`index.html`, `sw.js`, `manifest.json`, `docker-compose.yml`, `deploy/`) — [MIT](LICENSE)
+- **Playbooks & documentation** (`docs/`, `enterprise/`, `mobile/`, `ics/`, `templates/`, `playbooks/`) — [CC BY 4.0](LICENSE-docs.md)
+- ข้อมูล MITRE ATT&CK® (ชื่อ, ID, คำอธิบาย) อยู่ภายใต้ [ATT&CK Terms of Use](https://attack.mitre.org/resources/legal-and-branding/terms-of-use/) — © 2026 The MITRE Corporation. This work is reproduced and distributed with the permission of The MITRE Corporation. โปรเจกต์นี้ไม่ได้มีส่วนเกี่ยวข้องหรือได้รับการรับรองจาก MITRE
