@@ -1,6 +1,6 @@
 // Offline cache for the MITRE ATT&CK v20.0 Studio.
 // Bump CACHE_VERSION whenever index.html or the playbook JSON changes so old copies are dropped.
-const CACHE_VERSION = 'v20-1';
+const CACHE_VERSION = 'v20-2';
 const CACHE_NAME = `mitre-studio-${CACHE_VERSION}`;
 
 const PRECACHE = [
